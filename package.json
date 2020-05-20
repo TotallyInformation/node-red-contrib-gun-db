@@ -1,0 +1,81 @@
+{
+  "name": "node-red-contrib-gun-db",
+  "version": "0.0.0-dev1",
+  "description": "Collection of nodes to use Gun.js with Node-RED **WARNING: CONCEPT STAGE ONLY**",
+  "scripts": {
+    "postinstall": "node ./bin/postinstall",
+    "build": "node ./bin/mergehtml",
+    "watchbuild": "node ./bin/watchhtml",
+    "prepush": "npm run packfe && npm run build",
+    "push": "git push origin",
+    "pull": "git pull origin",
+    "presync": "npm run pull",
+    "sync": "npm run push",
+    "listbin": "ls ./node_modules/bin",
+    "npmtags": "npm dist-tag ls node-red-contrib-uibuilder",
+    "npmtagnext": "npm dist-tag add node-red-contrib-gun-db@$npm_package_version next",
+    "gittags": "git tag",
+    "gittag": "git tag -a v%npm_package_version%",
+    "gitpushtags": "git push origin --tags",
+    "release": "github-release-from-changelog --dry-run"
+  },
+  "dependencies": {
+    "gun": "^0.2020.514"
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.3.31",
+    "@types/node-red": "^0.20.0"
+  },
+  "node-red": {
+    "version": ">=1",
+    "nodes": {
+      "uibuilder": "nodes/uibuilder.js"
+    },
+    "notyetnodes": {}
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "directories": {
+    "bin": "./bin",
+    "example": "./examples",
+    "doc": "./docs",
+    "lib": "./nodes",
+    "test": "./tests"
+  },
+  "main": "./nodes/uibuilder.js",
+  "browser": "./nodes/src/uibuilderfe.js",
+  "bin": {
+    "mergehtml": "./bin/mergehtml.js",
+    "watchhtml": "./bin/watchhtml.js"
+  },
+  "browserslist": [
+    "> 0.5%",
+    "maintained node versions",
+    "last 2 versions",
+    "not dead",
+    "not ie < 11"
+  ],
+  "keywords": [
+    "xnode-red",
+    "gun.js",
+    "db"
+  ],
+  "homepage": "https://github.com/TotallyInformation/node-red-contrib-gun-db",
+  "bugs": "https://github.com/TotallyInformation/node-red-contrib-gun-db/issues",
+  "author": {
+    "name": "Julian Knight",
+    "url": "https://github.com/TotallyInformation"
+  },
+  "contributors": [
+    {
+      "name": "Julian Knight",
+      "url": "https://github.com/TotallyInformation"
+    }
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TotallyInformation/node-red-contrib-gun-db.git"
+  }
+}
