@@ -1,17 +1,13 @@
 {
   "name": "node-red-contrib-gun-db",
-  "version": "0.0.0-dev1",
+  "version": "0.0.1-dev1",
   "description": "Collection of nodes to use Gun.js with Node-RED **WARNING: CONCEPT STAGE ONLY**",
   "scripts": {
     "postinstall": "node ./bin/postinstall",
-    "build": "node ./bin/mergehtml",
-    "watchbuild": "node ./bin/watchhtml",
-    "prepush": "npm run packfe && npm run build",
     "push": "git push origin",
     "pull": "git pull origin",
     "presync": "npm run pull",
     "sync": "npm run push",
-    "listbin": "ls ./node_modules/bin",
     "npmtags": "npm dist-tag ls node-red-contrib-uibuilder",
     "npmtagnext": "npm dist-tag add node-red-contrib-gun-db@$npm_package_version next",
     "gittags": "git tag",
@@ -27,9 +23,9 @@
     "@types/node-red": "^0.20.0"
   },
   "node-red": {
-    "version": ">=1",
+    "version": ">=0",
     "nodes": {
-      "uibuilder": "nodes/uibuilder.js"
+        "gun get": "nodes/gun-get.js"
     },
     "notyetnodes": {}
   },
@@ -43,8 +39,7 @@
     "lib": "./nodes",
     "test": "./tests"
   },
-  "main": "./nodes/uibuilder.js",
-  "browser": "./nodes/src/uibuilderfe.js",
+  "main": "./nodes/gun-get.js",
   "bin": {
     "mergehtml": "./bin/mergehtml.js",
     "watchhtml": "./bin/watchhtml.js"
