@@ -29,8 +29,6 @@ module.exports = function(RED) {
      * @external RED
      * @see https://nodered.org/docs/creating-nodes/node-js
      **/
-
-    console.log('GUN-GET 2')
     
     /** The node's instance definition.
      * THIS FUNCTION IS RUN ON (RE)DEPLOYMENT - FOR EACH INSTANCE OF THIS NODE TYPE
@@ -42,8 +40,6 @@ module.exports = function(RED) {
         // Create the node instance
         RED.nodes.createNode(this, config)
 
-        console.log('GUN-GET 3')
-
         // copy 'this' object in case we need it in context of callbacks of other functions.
         const node = this
 
@@ -52,18 +48,19 @@ module.exports = function(RED) {
          **/
         node.soul  = config.soul || '' // Reference to a gun.get() for this soul
 
-        console.log('GUT-GET Soul: ', node.soul)
+        // Retrieve the config node
+        node.soulMaster = RED.nodes.getNode(node.soul)
 
-        // // Get reference to the required "Soul"
-        // if ( node.soul !== '' ) {
-        //     node.soulRef.map().on(function(item, itemId){
-        //         node.send(`[GUN:Config] ${node.soul}: ${itemId}=`, item)
-        //     })            
-        // } else {
-        //     //
-        // }
+        if (node.soulMaster) {
+            console.log('GUN-GET Soul: ', node.soulMaster)
 
-
+            // 
+            node.soulMaster.soulRef.map().on(function(item, itemId){
+                node.send(`[GUN:Config] ${node.soulMaster.soul}: ${itemId}=`, item)
+            })
+        } else {
+            console.log('GUN-GET No Soul Master', node.soulMaster)
+        }
 
     } // ---- End of nodeDefn (initialised node instance) ---- //
 

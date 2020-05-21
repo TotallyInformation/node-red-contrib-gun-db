@@ -21,8 +21,6 @@ const nodeNameConfig = 'gun-config'
 
 const Gun = require('gun')
 
-console.log('GUN-CONFIG 1')
-
 // THIS FUNCTION IS EXECUTED ONLY ONCE AS NODE-RED IS LOADING
 module.exports = function(RED) {
     'use strict'
@@ -31,8 +29,6 @@ module.exports = function(RED) {
      * @external RED
      * @see https://nodered.org/docs/creating-nodes/node-js
      **/
-
-    console.log('GUN-CONFIG 2')
     
     /** The node's instance definition.
      * THIS FUNCTION IS RUN ON (RE)DEPLOYMENT - FOR EACH INSTANCE OF THIS NODE TYPE
@@ -44,23 +40,24 @@ module.exports = function(RED) {
         // Create the node instance
         RED.nodes.createNode(this, config)
 
-        console.log('GUN-CONFIG 3')
-
         // copy 'this' object in case we need it in context of callbacks of other functions.
         const node = this
 
         /** Create local copies of the node configuration (as defined in the .html file)
          *  NB: Best to use defaults here as well as in the html file for safety
          **/
-        // node.protocol   = config.protocol || 'http'
-        // node.host  = config.host || ''
-        // node.port  = config.port || ''
         node.soul  = config.soul || ''
+
+        console.log('GUN-CONFIG 3', node.soul)
 
         try {
             // Get reference to the required "Soul"
-            if ( node.soul !== '' ) node.soulRef = Gun().get(node.soul)
-            //else node.soulRef = Gun().get()
+            if ( node.soul !== '' ) {
+                node.soulRef = Gun().get(node.soul)
+                console.log('GUN-CONFIG 4', node.soulRef)
+            } else {
+                node.soulRef = Gun().get()
+            }
             
             node.soulRef.map().on(function(item, itemId){
                 node.log(`[GUN:Config] ${node.soul}: ${itemId}=`, item)

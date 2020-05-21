@@ -48,7 +48,10 @@ module.exports = function(RED) {
          **/
         node.soul  = config.soul || '' // Reference to a gun.get() for this soul
 
-        console.log('GUT-SET Soul: ', node.soul)
+        // Retrieve the config node
+        node.soulMaster = RED.nodes.getNode(config.soul)
+
+        console.log('GUN-SET Soul: ', node.soulMaster)
 
         // // Get reference to the required "Soul"
         // if ( node.soul !== '' ) {
@@ -59,7 +62,51 @@ module.exports = function(RED) {
         //     //
         // }
 
+        /** Handler function for node flow input events (when a node instance receives a msg from the flow)
+         * @see https://nodered.org/blog/2019/09/20/node-done 
+         * @param {Object} msg The msg object received.
+         * @param {function} send Per msg send function, node-red v1+
+         * @param {function} done Per msg finish function, node-red v1+
+         **/
+        function nodeInputHandler(msg, send, done) {
+            
+            // If this is pre-1.0, 'send' will be undefined, so fallback to node.send
+            send = send || function() { node.send.apply(node,arguments) }
+            // If this is pre-1.0, 'done' will be undefined, so fallback to dummy function
+            done = done || function() { if (arguments.length>0) node.error.apply(node,arguments) }
 
+            // If msg is null, nothing will be sent
+            if ( msg !== null ) {
+                // if msg isn't null and isn't an object
+                // NOTE: This is paranoid and shouldn't be possible!
+                if ( typeof msg !== 'object' ) {
+                    // Force msg to be an object with payload of original msg
+                    msg = { 'payload': msg }
+                }
+
+                // Add topic from node config if present and not present in msg
+                if ( !(Object.prototype.hasOwnProperty.call(msg, 'topic')) || msg.topic === '' ) {
+                    if ( node.topic !== '' ) msg.topic = node.topic
+                    else msg.topic = nodeName
+                }
+
+                node.soulMaster.soulRef.put(msg.payload)
+
+                msg.payload = {
+                    'soul': node.soulMaster.soul,
+                    'data': msg.payload
+                }
+
+                // Send on the input msg to output
+                send(msg)
+            }
+
+            done()
+
+        } // -- end of flow msg received processing -- //
+
+        // Process inbound messages
+        node.on('input', nodeInputHandler)
 
     } // ---- End of nodeDefn (initialised node instance) ---- //
 
