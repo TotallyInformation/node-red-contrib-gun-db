@@ -51,7 +51,7 @@ module.exports = function(RED) {
         // Retrieve the config node
         node.soulConfig = RED.nodes.getNode(config.soul)
 
-        console.log(`GUN-SET SoulConfig: Soul: ${node.soulConfig.soul} - `, node.soulConfig.soulRef)
+        //console.log(`GUN-SET SoulConfig: Soul: ${node.soulConfig.soul} - `, node.soulConfig.soulRef)
 
         /** Handler function for node flow input events (when a node instance receives a msg from the flow)
          * @see https://nodered.org/blog/2019/09/20/node-done 

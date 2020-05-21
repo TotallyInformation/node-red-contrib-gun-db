@@ -52,7 +52,7 @@ module.exports = function(RED) {
         node.soulConfig = RED.nodes.getNode(node.soul)
 
         if (node.soulConfig) {
-            console.log(`GUN-GET SoulConfig: Soul: ${node.soulConfig.soul} - `, node.soulConfig.soulRef)
+            //console.log(`GUN-GET SoulConfig: Soul: ${node.soulConfig.soul} - `, node.soulConfig.soulRef)
 
             // 
             node.soulConfig.Gun.get(node.soulConfig.soul).map().on(function(item, itemId){
