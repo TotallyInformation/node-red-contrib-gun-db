@@ -19,7 +19,7 @@
 // Node name must match this nodes html file name AND the nodeType in the html file
 const nodeName = 'gun-set'
 
-const Gun = require('gun')
+//const Gun = require('gun') // Not required, we use a single reference in the configuration node
 
 // THIS FUNCTION IS EXECUTED ONLY ONCE AS NODE-RED IS LOADING
 module.exports = function(RED) {
@@ -49,9 +49,8 @@ module.exports = function(RED) {
         node.soul  = config.soul || '' // Reference to a gun.get() for this soul
 
         // Retrieve the config node
-        node.soulConfig = RED.nodes.getNode(config.soul)
-
-        //console.log(`GUN-SET SoulConfig: Soul: ${node.soulConfig.soul} - `, node.soulConfig.soulRef)
+        node.gunconfig  = config.gunconfig || '' // Reference to a gun configuration node
+        node.soul  = config.soul || '' // Name of the soul to use
 
         /** Handler function for node flow input events (when a node instance receives a msg from the flow)
          * @see https://nodered.org/blog/2019/09/20/node-done 
@@ -65,6 +64,9 @@ module.exports = function(RED) {
             send = send || function() { node.send.apply(node,arguments) }
             // If this is pre-1.0, 'done' will be undefined, so fallback to dummy function
             done = done || function() { if (arguments.length>0) node.error.apply(node,arguments) }
+
+            // Retrieve the reference to the Gun factory function
+            node.Gun = RED.nodes.getNode(node.gunconfig).Gun
 
             // If msg is null, nothing will be sent
             if ( msg !== null ) {
@@ -81,10 +83,10 @@ module.exports = function(RED) {
                     else msg.topic = nodeName
                 }
 
-                node.soulConfig.Gun.get(node.soulConfig.soul).set(msg.payload)
+                node.Gun.get(node.soul).set(msg.payload)
 
                 msg.payload = {
-                    'soul': node.soulConfig.soul,
+                    'soul': node.soul,
                     'data': msg.payload
                 }
 
@@ -92,9 +94,10 @@ module.exports = function(RED) {
                 send(msg)
             }
 
-            node.soulConfig.Gun.get(node.soulConfig.soul).once(function(item, itemId){
-                console.log(`[GUN-SET:once] ${node.soulConfig.soul}: ${itemId}=`, item)
-            })
+            // One-off data dump for debugging only
+            // node.Gun.get(node.soul).once(function(item, itemId){
+            //     console.log(`[GUN-SET:once] ${node.soul}: ${itemId}=`, item)
+            // })
 
             done()
 

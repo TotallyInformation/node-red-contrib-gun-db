@@ -28,7 +28,7 @@
             category: 'config', // Palette category - specific to config nodes
 
             defaults: {
-                soul: { value: '', required: true },
+                server: { value: '', required: false },
             },
 
             label: function() { return `GET(${this.soul})` },
@@ -42,12 +42,16 @@
 <script type="text/html" data-template-name="gun-config">
 
     <div class="form-row">
-        <label for="node-config-input-soul"><i class="fa fa-tag"></i> Soul</label>
-        <input type="text" id="node-config-input-soul">
+        <label for="node-config-input-server"><i class="fa fa-tag"></i> Soul</label>
+        <input type="text" id="node-config-input-server">
+        <div class="form-tips">Leave blank to use local-only. Or add a full URL to a Gun.js peer.</div>
     </div>
 
 </script>
 
 <script type="text/html" data-help-name="gun-config">
     <p>Configuration node for Gun.js. Creates a reference to the defined "soul".</p>
+    <p>
+        Creates a reference to a local Gun.js database with an optional link to a peer.
+    </p>
 </script>

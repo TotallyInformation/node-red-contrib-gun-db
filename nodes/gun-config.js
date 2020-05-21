@@ -46,29 +46,12 @@ module.exports = function(RED) {
         /** Create local copies of the node configuration (as defined in the .html file)
          *  NB: Best to use defaults here as well as in the html file for safety
          **/
-        node.soul  = config.soul || ''
+        node.server = config.server || undefined
 
-        console.log('GUN-CONFIG 3 - Soul: ', node.soul)
+        if (node.server) node.Gun = Gun(node.server)
+        else node.Gun = Gun()
 
-        node.Gun = Gun()
-
-        try {
-            // Get reference to the required "Soul"
-            if ( node.soul !== '' ) {
-                node.soulRef = node.Gun.get(node.soul)
-                //console.log('GUN-CONFIG 4', node.soulRef)
-            } else {
-                node.soulRef = node.Gun.get()
-            }
-            
-            node.Gun.get(node.soul).map().on(function(item, itemId){
-                node.log(`[GUN:Config:map:on] ${node.soul}: ${itemId}=`, item)
-            })
-        } catch (e) {
-            console.log('GUN-CONFIG 4 error ', e)
-        }
-
-    } // ---- End of nodeGo (initialised node instance) ---- //
+    } // ---- End of nodeDefnConfig (initialised node instance) ---- //
 
     /** Register the node by name. This must be called before overriding any of the node functions.
      * @param {string} nodeName - Name used in the matching html file that defines the admin ui

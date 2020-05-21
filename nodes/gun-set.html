@@ -28,10 +28,12 @@
             category: 'storage', // Palette category
 
             defaults: {
-                soul: { value: '', required: true, type: 'gun-config' },
+                name: { value: '', required: false, },
+                gunconfig: { value: '', required: true, type: 'gun-config', },
+                soul: { value: '', required: true,  },
             },
 
-            label: function() { console.log(this.soul); return `SET(${this.soul})` },
+            label: function() { return `SET(${this.soul})` },
             inputs:1,
             outputs:1,
         }
@@ -44,12 +46,23 @@
 <script type="text/html" data-template-name="gun-set">
 
     <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Soul</label>
+        <input type="text" id="node-input-name">
+
+        <label for="node-input-gunconfig"><i class="fa fa-tag"></i> Soul</label>
+        <input type="text" id="node-input-gunconfig">
+
         <label for="node-input-soul"><i class="fa fa-tag"></i> Soul</label>
         <input type="text" id="node-input-soul">
+
+        <div class="form-tips">
+            The "soul" is passed to a <code>Gun().set()</code>, it can only be a root node right now.
+            Eventually you will be able to specify something deeper.
+        </div>
     </div>
 
 </script>
 
 <script type="text/html" data-help-name="gun-set">
-    <p>Gun.js reference to a specific "Soul".</p>
+    <p>Send msg payload to a Gun.js "Soul".</p>
 </script>

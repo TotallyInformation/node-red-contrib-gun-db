@@ -19,7 +19,7 @@
 // Node name must match this nodes html file name AND the nodeType in the html file
 const nodeName = 'gun-get'
 
-const Gun = require('gun')
+//const Gun = require('gun') // Not required, we use a single reference in the configuration node
 
 // THIS FUNCTION IS EXECUTED ONLY ONCE AS NODE-RED IS LOADING
 module.exports = function(RED) {
@@ -46,26 +46,26 @@ module.exports = function(RED) {
         /** Create local copies of the node configuration (as defined in the .html file)
          *  NB: Best to use defaults here as well as in the html file for safety
          **/
-        node.soul  = config.soul || '' // Reference to a gun.get() for this soul
+        node.gunconfig  = config.gunconfig || '' // Reference to a gun configuration node
+        node.soul  = config.soul || '' // Name of the soul to use
 
-        // Retrieve the config node
-        node.soulConfig = RED.nodes.getNode(node.soul)
+        // Retrieve the reference to the Gun factory function
+        node.Gun = RED.nodes.getNode(node.gunconfig).Gun
 
-        if (node.soulConfig) {
-            //console.log(`GUN-GET SoulConfig: Soul: ${node.soulConfig.soul} - `, node.soulConfig.soulRef)
-
-            // 
-            node.soulConfig.Gun.get(node.soulConfig.soul).map().on(function(item, itemId){
+        if (node.Gun) {
+            // Create a listener for any change events on this soul
+            node.Gun.get(node.soul).map().on(function(item, itemId){
                 node.send({
-                    'topic': node.soulConfig.soul,
+                    'topic': node.soul,
+                    //TODO Probably need to allow this to be configured in the front-end
                     'payload': {
-                        'key': itemId,
-                        'value': item
+                        'soul': itemId,
+                        'data': item
                     },
                 })
             })
         } else {
-            console.log('GUN-GET No Soul Master', node.soulConfig)
+            console.log('GUN-GET No Gun Factory', node.Gun)
         }
 
     } // ---- End of nodeDefn (initialised node instance) ---- //
