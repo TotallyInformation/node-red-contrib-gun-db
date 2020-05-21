@@ -17,7 +17,7 @@
 'use strict'
 
 // Node name must match this nodes html file name AND the nodeType in the html file
-const nodeName = 'gun-get'
+const nodeName = 'gun-put'
 
 //const Gun = require('gun') // Not required, we use a single reference in the configuration node
 
@@ -29,7 +29,7 @@ module.exports = function(RED) {
      * @external RED
      * @see https://nodered.org/docs/creating-nodes/node-js
      **/
-    
+
     /** The node's instance definition.
      * THIS FUNCTION IS RUN ON (RE)DEPLOYMENT - FOR EACH INSTANCE OF THIS NODE TYPE
      * this/node var is rebuilt on every redeployment
@@ -46,29 +46,55 @@ module.exports = function(RED) {
         /** Create local copies of the node configuration (as defined in the .html file)
          *  NB: Best to use defaults here as well as in the html file for safety
          **/
+        node.soul  = config.soul || '' // Reference to a gun.get() for this soul
+
+        // Retrieve the config node
         node.gunconfig  = config.gunconfig || '' // Reference to a gun configuration node
         node.soul  = config.soul || '' // Name of the soul to use
 
-        // Retrieve the reference to the Gun factory function
-        node.Gun = RED.nodes.getNode(node.gunconfig).Gun
+        /** Handler function for node flow input events (when a node instance receives a msg from the flow)
+         * @see https://nodered.org/blog/2019/09/20/node-done 
+         * @param {Object} msg The msg object received.
+         * @param {function} send Per msg send function, node-red v1+
+         * @param {function} done Per msg finish function, node-red v1+
+         **/
+        function nodeInputHandler(msg, send, done) {
+            
+            // Retrieve the reference to the Gun factory function
+            node.Gun = RED.nodes.getNode(node.gunconfig).Gun
 
-        if (node.Gun) {
-            // Create a listener for any change events on this soul - re-running will replace the previous listener
-            //TODO Consider whether to consolidate output before sending (or allow that in a flag)
-            node.Gun.get(node.soul).map().on(function(value, key){
-                node.send({
-                    'topic': node.soul,
-                    //TODO Probably need to allow this to be configured in the front-end
-                    'payload': {
-                        'soul': node.soul,
-                        'key': key,
-                        'value': value,
-                    },
-                })
-            })
-        } else {
-            console.log('GUN-GET No Gun Factory', node.Gun)
-        }
+            // If msg is null, nothing will be sent
+            if ( msg !== null ) {
+                if (node.Gun) {
+                    /** Put values cannot be an array or a scalar (must be an object)
+                     * TODO Throw warnings for array or scalar payloads and/or add flag
+                     * TODO How to get the key for a newly added entry?
+                     */
+                    node.Gun.get(node.soul).put(msg.payload)
+
+                    send({
+                        'topic': node.soul,
+                        'payload': {
+                            //'key': key,
+                            'value': msg.payload,
+                        }
+                    })
+                } else {
+                    console.log('GUN-PUT No Gun Factory', node.Gun)
+                }
+            }
+
+            // One-off data dump for debugging only
+            // node.Gun.get(node.soul).once(function(item, itemId){
+            //     console.log(`[GUN-SET:once] ${node.soul}: ${itemId}=`, item)
+            // })
+
+            done()
+
+        } // -- end of flow msg received processing -- //
+
+        // Process inbound messages
+        node.on('input', nodeInputHandler)
 
     } // ---- End of nodeDefn (initialised node instance) ---- //
 

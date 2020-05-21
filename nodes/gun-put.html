@@ -20,7 +20,7 @@
     ;(function () {
         // AKA node-type (in docs). Must match the html/js filenames and the nodeName in the .js file
         // @see https://nodered.org/docs/creating-nodes/node-html#node-type
-        const nodeName = 'gun-set'
+        const nodeName = 'gun-put'
 
         // Default configuration settings (node definition) for this node type
         // @see https://nodered.org/docs/creating-nodes/node-html#node-definition
@@ -33,8 +33,8 @@
                 soul: { value: '', required: true,  },
             },
 
-            label: function() { return `SET(${this.soul})` },
-            icon: 'fa-arrow-circle-o-right',
+            label: function() { return `PUT(${this.soul})` },
+            icon: 'fa-arrow-circle-right',
             inputs:1,
             outputs:1,
         }
@@ -44,7 +44,7 @@
     })()
 </script>
 
-<script type="text/html" data-template-name="gun-set">
+<script type="text/html" data-template-name="gun-put">
 
     <!-- Node Name -->
     <div class="form-row">
@@ -69,6 +69,6 @@
 
 </script>
 
-<script type="text/html" data-help-name="gun-set">
+<script type="text/html" data-help-name="gun-put">
     <p>Send msg payload to a Gun.js "Soul".</p>
 </script>

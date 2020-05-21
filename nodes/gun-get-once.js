@@ -17,7 +17,7 @@
 'use strict'
 
 // Node name must match this nodes html file name AND the nodeType in the html file
-const nodeName = 'gun-set'
+const nodeName = 'gun-get-once'
 
 //const Gun = require('gun') // Not required, we use a single reference in the configuration node
 
@@ -29,7 +29,7 @@ module.exports = function(RED) {
      * @external RED
      * @see https://nodered.org/docs/creating-nodes/node-js
      **/
-
+    
     /** The node's instance definition.
      * THIS FUNCTION IS RUN ON (RE)DEPLOYMENT - FOR EACH INSTANCE OF THIS NODE TYPE
      * this/node var is rebuilt on every redeployment
@@ -46,11 +46,12 @@ module.exports = function(RED) {
         /** Create local copies of the node configuration (as defined in the .html file)
          *  NB: Best to use defaults here as well as in the html file for safety
          **/
-        node.soul  = config.soul || '' // Reference to a gun.get() for this soul
-
-        // Retrieve the config node
         node.gunconfig  = config.gunconfig || '' // Reference to a gun configuration node
         node.soul  = config.soul || '' // Name of the soul to use
+        node.singleOut  = config.singleOut
+
+        // Retrieve the reference to the Gun factory function
+        node.Gun = RED.nodes.getNode(node.gunconfig).Gun
 
         /** Handler function for node flow input events (when a node instance receives a msg from the flow)
          * @see https://nodered.org/blog/2019/09/20/node-done 
@@ -60,34 +61,50 @@ module.exports = function(RED) {
          **/
         function nodeInputHandler(msg, send, done) {
             
+            // If this is pre-1.0, 'send' will be undefined, so fallback to node.send
+            send = send || function() { node.send.apply(node,arguments) }
+            // If this is pre-1.0, 'done' will be undefined, so fallback to dummy function
+            done = done || function() { if (arguments.length>0) node.error.apply(node,arguments) }
+
             // Retrieve the reference to the Gun factory function
             node.Gun = RED.nodes.getNode(node.gunconfig).Gun
 
             // If msg is null, nothing will be sent
             if ( msg !== null ) {
                 if (node.Gun) {
-                    /** Set value cannot be an array (but can be scalar or object)
-                     * TODO Throw warning for arrays
-                     * TODO How to get the key for a newly added entry?
-                     */
-                    node.Gun.get(node.soul).set(msg.payload)
-
-                    send({
-                        'topic': node.soul,
-                        'payload': {
-                            //'key': key,
-                            'value': msg.payload,
-                        }
-                    })
+                    if ( node.singleOut === true ) {
+                        // Create a one time output & listen for future additions only - re-running will replace the previous listener
+                        // NB: Adding a new doc will produce TWO outputs. 1 for the soul and one for the new document.
+                        node.Gun.get(node.soul).once(function(value, key){
+                            send({
+                                'topic': node.soul,
+                                //TODO Probably need to allow this to be configured in the front-end
+                                'payload': {
+                                    'soul': node.soul,
+                                    'key': key,
+                                    'value': value,
+                                },
+                            })
+                        })
+                    } else {
+                        // Create a one time output & listen for future additions only - re-running will replace the previous listener
+                        node.Gun.get(node.soul).map().once(function(value, key){
+                            send({
+                                'topic': node.soul,
+                                //TODO Probably need to allow this to be configured in the front-end
+                                'payload': {
+                                    'soul': node.soul,
+                                    'key': key,
+                                    'value': value,
+                                },
+                            })
+                        })
+                    }
                 } else {
-                    console.log('GUN-SET No Gun Factory', node.Gun)
+                    console.log('GUN-GET-ONCE No Gun Factory', node.Gun)
                 }
-            }
 
-            // One-off data dump for debugging only
-            // node.Gun.get(node.soul).once(function(item, itemId){
-            //     console.log(`[GUN-SET:once] ${node.soul}: ${itemId}=`, item)
-            // })
+            }
 
             done()
 

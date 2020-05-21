@@ -20,7 +20,7 @@
     ;(function () {
         // AKA node-type (in docs). Must match the html/js filenames and the nodeName in the .js file
         // @see https://nodered.org/docs/creating-nodes/node-html#node-type
-        const nodeName = 'gun-set'
+        const nodeName = 'gun-get-once'
 
         // Default configuration settings (node definition) for this node type
         // @see https://nodered.org/docs/creating-nodes/node-html#node-definition
@@ -30,11 +30,12 @@
             defaults: {
                 name: { value: '', required: false, },
                 gunconfig: { value: '', required: true, type: 'gun-config', },
-                soul: { value: '', required: true,  },
+                soul: { value: '', required: true, },
+                singleOut: { value: false, required: false, },
             },
 
-            label: function() { return `SET(${this.soul})` },
-            icon: 'fa-arrow-circle-o-right',
+            label: function() { return `GET-ONCE(${this.soul})` },
+            icon: 'fa-arrow-circle-o-left',
             inputs:1,
             outputs:1,
         }
@@ -44,8 +45,9 @@
     })()
 </script>
 
-<script type="text/html" data-template-name="gun-set">
+<script type="text/html" data-template-name="gun-get-once">
 
+    <div class="form-row">
     <!-- Node Name -->
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
@@ -63,12 +65,27 @@
     </div>
 
     <div class="form-tips">
-        The "soul" is passed to a <code>Gun().set()</code>, it can only be a root node right now.
+        The "soul" is passed to a <code>Gun().get()</code>, it can only be a root node right now.
         Eventually you will be able to specify something deeper.
+    </div>
+
+    <div class="form-tips">
+        Note that the input is purely a trigger. Nothing from the input is sent to the output.
+        Also note that this node will also fire if a document gets added.
+    </div>
+
+    <div class="form-row">
+        <input type="checkbox" id="node-input-singleOut" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-singleOut" style="width: 90%;">Output a single msg rather than one for each document?</label>
+    </div>
+
+    <div class="form-tips">
+        If selected, a single output msg is produced containing all documents for the soul.<br>
+        <b>However</b>, when adding new documents, you will get TWO outputs rather than 1. 1 for the soul and 1 for the document. This bug is documented in the Gun.js docs.
     </div>
 
 </script>
 
-<script type="text/html" data-help-name="gun-set">
-    <p>Send msg payload to a Gun.js "Soul".</p>
+<script type="text/html" data-help-name="gun-get-once">
+    <p>Get the contents of a Gun.js soul once.</p>
 </script>

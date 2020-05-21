@@ -34,6 +34,7 @@
             },
 
             label: function() { return `GET(${this.soul})` },
+            icon: 'fa-arrow-circle-left',
             inputs:0,
             outputs:1,
         }
@@ -46,19 +47,25 @@
 <script type="text/html" data-template-name="gun-get">
 
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Soul</label>
+    <!-- Node Name -->
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name">
+    </div>
 
-        <label for="node-input-gunconfig"><i class="fa fa-tag"></i> Soul</label>
+    <div class="form-row">
+        <label for="node-input-gunconfig"><i class="fa fa-bolt"></i> Gun Config</label>
         <input type="text" id="node-input-gunconfig">
+    </div>
 
-        <label for="node-input-soul"><i class="fa fa-tag"></i> Soul</label>
+    <div class="form-row">
+        <label for="node-input-soul"><i class="fa fa-database"></i> Soul</label>
         <input type="text" id="node-input-soul">
+    </div>
 
-        <div class="form-tips">
-            The "soul" is passed to a <code>Gun().get()</code>, it can only be a root node right now.
-            Eventually you will be able to specify something deeper.
-        </div>
+    <div class="form-tips">
+        The "soul" is passed to a <code>Gun().get()</code>, it can only be a root node right now.
+        Eventually you will be able to specify something deeper.
     </div>
 
 </script>
