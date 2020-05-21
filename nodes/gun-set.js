@@ -17,7 +17,7 @@
 'use strict'
 
 // Node name must match this nodes html file name AND the nodeType in the html file
-const nodeName = 'gun-get'
+const nodeName = 'gun-set'
 
 const Gun = require('gun')
 
@@ -30,8 +30,6 @@ module.exports = function(RED) {
      * @see https://nodered.org/docs/creating-nodes/node-js
      **/
 
-    console.log('GUN-GET 2')
-    
     /** The node's instance definition.
      * THIS FUNCTION IS RUN ON (RE)DEPLOYMENT - FOR EACH INSTANCE OF THIS NODE TYPE
      * this/node var is rebuilt on every redeployment
@@ -42,8 +40,6 @@ module.exports = function(RED) {
         // Create the node instance
         RED.nodes.createNode(this, config)
 
-        console.log('GUN-GET 3')
-
         // copy 'this' object in case we need it in context of callbacks of other functions.
         const node = this
 
@@ -52,7 +48,7 @@ module.exports = function(RED) {
          **/
         node.soul  = config.soul || '' // Reference to a gun.get() for this soul
 
-        console.log('GUT-GET Soul: ', node.soul)
+        console.log('GUT-SET Soul: ', node.soul)
 
         // // Get reference to the required "Soul"
         // if ( node.soul !== '' ) {

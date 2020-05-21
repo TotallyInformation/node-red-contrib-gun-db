@@ -20,7 +20,7 @@
     ;(function () {
         // AKA node-type (in docs). Must match the html/js filenames and the nodeName in the .js file
         // @see https://nodered.org/docs/creating-nodes/node-html#node-type
-        const nodeName = 'gun-get'
+        const nodeName = 'gun-set'
 
         // Default configuration settings (node definition) for this node type
         // @see https://nodered.org/docs/creating-nodes/node-html#node-definition
@@ -31,8 +31,8 @@
                 soul: { value: '', required: true, type: 'gun-config' },
             },
 
-            label: function() { console.log(this.soul); return `GET(${this.soul})` },
-            inputs:0,
+            label: function() { console.log(this.soul); return `SET(${this.soul})` },
+            inputs:1,
             outputs:1,
         }
 
@@ -41,7 +41,7 @@
     })()
 </script>
 
-<script type="text/html" data-template-name="gun-get">
+<script type="text/html" data-template-name="gun-set">
 
     <div class="form-row">
         <label for="node-input-soul"><i class="fa fa-tag"></i> Soul</label>
@@ -50,6 +50,6 @@
 
 </script>
 
-<script type="text/html" data-help-name="gun-get">
+<script type="text/html" data-help-name="gun-set">
     <p>Gun.js reference to a specific "Soul".</p>
 </script>

@@ -25,6 +25,8 @@
   "node-red": {
     "version": ">=0",
     "nodes": {
+        "gun config": "nodes/gun-config.js",
+        "gun set": "nodes/gun-set.js",
         "gun get": "nodes/gun-get.js"
     },
     "notyetnodes": {}

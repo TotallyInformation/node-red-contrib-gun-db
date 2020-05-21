@@ -17,7 +17,7 @@
 'use strict'
 
 // Node name must match this nodes html file name AND the nodeType in the html file
-const nodeName = 'gun-config'
+const nodeNameConfig = 'gun-config'
 
 const Gun = require('gun')
 
@@ -39,7 +39,7 @@ module.exports = function(RED) {
      * this/node var is rebuilt on every redeployment
      * @param {object} config - The config vars defined in the matching html file used in the Editor admin interface
      */
-    function nodeDefn(config) {
+    function nodeDefnConfig(config) {
 
         // Create the node instance
         RED.nodes.createNode(this, config)
@@ -74,7 +74,7 @@ module.exports = function(RED) {
     /** Register the node by name. This must be called before overriding any of the node functions.
      * @param {string} nodeName - Name used in the matching html file that defines the admin ui
      **/
-    RED.nodes.registerType(nodeName, nodeDefn)
+    RED.nodes.registerType(nodeNameConfig, nodeDefnConfig)
 
 } // ---- End of module.exports ---- //
 

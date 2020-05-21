@@ -17,24 +17,26 @@
 <script type="text/javascript">
     'use strict'
 
-    // AKA node-type (in docs). Must match the html/js filenames and the nodeName in the .js file
-    // @see https://nodered.org/docs/creating-nodes/node-html#node-type
-    const nodeName = 'gun-config'
+    ;(function () {
+        // AKA node-type (in docs). Must match the html/js filenames and the nodeName in the .js file
+        // @see https://nodered.org/docs/creating-nodes/node-html#node-type
+        const nodeName = 'gun-config'
 
-    // Default configuration settings (node definition) for this node type
-    // @see https://nodered.org/docs/creating-nodes/node-html#node-definition
-    const nodeConfig = {
-        category: 'config', // Palette category - specific to config nodes
+        // Default configuration settings (node definition) for this node type
+        // @see https://nodered.org/docs/creating-nodes/node-html#node-definition
+        const nodeConfig = {
+            category: 'config', // Palette category - specific to config nodes
 
-        defaults: {
-            soul: { value: '', required: true },
-        },
+            defaults: {
+                soul: { value: '', required: true },
+            },
 
-        label: function() { return `GET(${this.soul})` },
-    }
+            label: function() { return `GET(${this.soul})` },
+        }
 
-    // Register the node type in the palette in the Node-RED admin interface
-    RED.nodes.registerType( nodeName, nodeConfig )
+        // Register the node type in the palette in the Node-RED admin interface
+        RED.nodes.registerType( nodeName, nodeConfig )
+    })()
 </script>
 
 <script type="text/html" data-template-name="gun-config">
