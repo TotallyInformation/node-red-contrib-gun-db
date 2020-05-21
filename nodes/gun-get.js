@@ -49,17 +49,23 @@ module.exports = function(RED) {
         node.soul  = config.soul || '' // Reference to a gun.get() for this soul
 
         // Retrieve the config node
-        node.soulMaster = RED.nodes.getNode(node.soul)
+        node.soulConfig = RED.nodes.getNode(node.soul)
 
-        if (node.soulMaster) {
-            console.log('GUN-GET Soul: ', node.soulMaster)
+        if (node.soulConfig) {
+            console.log(`GUN-GET SoulConfig: Soul: ${node.soulConfig.soul} - `, node.soulConfig.soulRef)
 
             // 
-            node.soulMaster.soulRef.map().on(function(item, itemId){
-                node.send(`[GUN:Config] ${node.soulMaster.soul}: ${itemId}=`, item)
+            node.soulConfig.Gun.get(node.soulConfig.soul).map().on(function(item, itemId){
+                node.send({
+                    'topic': node.soulConfig.soul,
+                    'payload': {
+                        'key': itemId,
+                        'value': item
+                    },
+                })
             })
         } else {
-            console.log('GUN-GET No Soul Master', node.soulMaster)
+            console.log('GUN-GET No Soul Master', node.soulConfig)
         }
 
     } // ---- End of nodeDefn (initialised node instance) ---- //

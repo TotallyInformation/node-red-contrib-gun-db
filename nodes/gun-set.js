@@ -49,18 +49,9 @@ module.exports = function(RED) {
         node.soul  = config.soul || '' // Reference to a gun.get() for this soul
 
         // Retrieve the config node
-        node.soulMaster = RED.nodes.getNode(config.soul)
+        node.soulConfig = RED.nodes.getNode(config.soul)
 
-        console.log('GUN-SET Soul: ', node.soulMaster)
-
-        // // Get reference to the required "Soul"
-        // if ( node.soul !== '' ) {
-        //     node.soulRef.map().on(function(item, itemId){
-        //         node.send(`[GUN:Config] ${node.soul}: ${itemId}=`, item)
-        //     })            
-        // } else {
-        //     //
-        // }
+        console.log(`GUN-SET SoulConfig: Soul: ${node.soulConfig.soul} - `, node.soulConfig.soulRef)
 
         /** Handler function for node flow input events (when a node instance receives a msg from the flow)
          * @see https://nodered.org/blog/2019/09/20/node-done 
@@ -90,16 +81,20 @@ module.exports = function(RED) {
                     else msg.topic = nodeName
                 }
 
-                node.soulMaster.soulRef.put(msg.payload)
+                node.soulConfig.Gun.get(node.soulConfig.soul).set(msg.payload)
 
                 msg.payload = {
-                    'soul': node.soulMaster.soul,
+                    'soul': node.soulConfig.soul,
                     'data': msg.payload
                 }
 
                 // Send on the input msg to output
                 send(msg)
             }
+
+            node.soulConfig.Gun.get(node.soulConfig.soul).once(function(item, itemId){
+                console.log(`[GUN-SET:once] ${node.soulConfig.soul}: ${itemId}=`, item)
+            })
 
             done()
 

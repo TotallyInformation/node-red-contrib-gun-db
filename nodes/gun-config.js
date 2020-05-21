@@ -48,22 +48,24 @@ module.exports = function(RED) {
          **/
         node.soul  = config.soul || ''
 
-        console.log('GUN-CONFIG 3', node.soul)
+        console.log('GUN-CONFIG 3 - Soul: ', node.soul)
+
+        node.Gun = Gun()
 
         try {
             // Get reference to the required "Soul"
             if ( node.soul !== '' ) {
-                node.soulRef = Gun().get(node.soul)
-                console.log('GUN-CONFIG 4', node.soulRef)
+                node.soulRef = node.Gun.get(node.soul)
+                //console.log('GUN-CONFIG 4', node.soulRef)
             } else {
-                node.soulRef = Gun().get()
+                node.soulRef = node.Gun.get()
             }
             
-            node.soulRef.map().on(function(item, itemId){
-                node.log(`[GUN:Config] ${node.soul}: ${itemId}=`, item)
+            node.Gun.get(node.soul).map().on(function(item, itemId){
+                node.log(`[GUN:Config:map:on] ${node.soul}: ${itemId}=`, item)
             })
         } catch (e) {
-            console.log('GUN-CONFIG 3 error ', e)
+            console.log('GUN-CONFIG 4 error ', e)
         }
 
     } // ---- End of nodeGo (initialised node instance) ---- //
