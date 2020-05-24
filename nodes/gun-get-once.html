@@ -34,8 +34,8 @@
                 singleOut: { value: false, required: false, },
             },
 
-            label: function() { return `GET-ONCE(${this.soul})` },
-            icon: 'fa-arrow-circle-o-left',
+            label: function() { return this.name ? this.name : `GET-ONCE(${this.soul})` },
+            icon: 'font-awesome/fa-arrow-circle-o-left',
             inputs:1,
             outputs:1,
         }

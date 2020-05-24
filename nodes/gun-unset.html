@@ -20,18 +20,23 @@
     ;(function () {
         // AKA node-type (in docs). Must match the html/js filenames and the nodeName in the .js file
         // @see https://nodered.org/docs/creating-nodes/node-html#node-type
-        const nodeName = 'gun-config'
+        const nodeName = 'gun-unset'
 
         // Default configuration settings (node definition) for this node type
         // @see https://nodered.org/docs/creating-nodes/node-html#node-definition
         const nodeConfig = {
-            category: 'config', // Palette category - specific to config nodes
+            category: 'storage', // Palette category
 
             defaults: {
-                server: { value: '', required: false },
+                name: { value: '', required: false, },
+                gunconfig: { value: '', required: true, type: 'gun-config', },
+                soul: { value: '', required: true,  },
             },
 
-            label: function() { return `GUN(${this.server})` },
+            label: function() { return this.name ? this.name : `SET(${this.soul})` },
+            icon: 'font-awesome/fa-trash',
+            inputs:1,
+            outputs:1,
         }
 
         // Register the node type in the palette in the Node-RED admin interface
@@ -39,20 +44,31 @@
     })()
 </script>
 
-<script type="text/html" data-template-name="gun-config">
+<script type="text/html" data-template-name="gun-unset">
 
+    <!-- Node Name -->
     <div class="form-row">
-        <label for="node-config-input-server"><i class="fa fa-tag"></i> Server</label>
-        <input type="text" id="node-config-input-server">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name">
     </div>
 
-    <div class="form-tips">Leave blank to use local-only. Or add a full URL to a Gun.js peer.</div>
+    <div class="form-row">
+        <label for="node-input-gunconfig"><i class="fa fa-bolt"></i> Gun Config</label>
+        <input type="text" id="node-input-gunconfig">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-soul"><i class="fa fa-database"></i> Soul</label>
+        <input type="text" id="node-input-soul">
+    </div>
+
+    <div class="form-tips">
+        The "soul" is passed to a <code>Gun().unset()</code>, it can only be a root node right now.
+        Eventually you will be able to specify something deeper.
+    </div>
 
 </script>
 
-<script type="text/html" data-help-name="gun-config">
-    <p>Configuration node for Gun.js. Creates a reference to the defined "soul".</p>
-    <p>
-        Creates a reference to a local Gun.js database with an optional link to a peer.
-    </p>
+<script type="text/html" data-help-name="gun-unset">
+    <p>Delete a Gun.js "Soul".</p>
 </script>

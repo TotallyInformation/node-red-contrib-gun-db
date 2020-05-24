@@ -33,8 +33,8 @@
                 soul: { value: '', required: true,  },
             },
 
-            label: function() { return `PUT(${this.soul})` },
-            icon: 'fa-arrow-circle-right',
+            label: function() { return this.name ? this.name : `PUT(${this.soul})` },
+            icon: 'font-awesome/fa-arrow-circle-down',
             inputs:1,
             outputs:1,
         }

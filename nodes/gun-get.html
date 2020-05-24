@@ -33,8 +33,8 @@
                 soul: { value: '', required: true, }
             },
 
-            label: function() { return `GET(${this.soul})` },
-            icon: 'fa-arrow-circle-left',
+            label: function() { return this.name ? this.name : `GET(${this.soul})` },
+            icon: 'font-awesome/fa-arrow-circle-left',
             inputs:0,
             outputs:1,
         }

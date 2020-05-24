@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-gun-db",
-  "version": "0.0.1-dev4",
+  "version": "0.0.1-dev5",
   "description": "Collection of nodes to use Gun.js with Node-RED **WARNING: CONCEPT STAGE ONLY**",
   "scripts": {
     "postinstall": "node ./bin/postinstall",
@@ -29,7 +29,8 @@
         "Gun Put": "nodes/gun-put.js",
         "Gun Set": "nodes/gun-set.js",
         "Gun In": "nodes/gun-get.js",
-        "Gun Out": "nodes/gun-get-once.js"
+        "Gun Out": "nodes/gun-get-once.js",
+        "Gun Unset": "nodes/gun-unset.js"
     },
     "notyetnodes": {}
   },

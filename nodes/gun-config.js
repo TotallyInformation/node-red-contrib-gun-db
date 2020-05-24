@@ -20,6 +20,7 @@
 const nodeNameConfig = 'gun-config'
 
 const Gun = require('gun')
+//require('gun/lib/unset.js')
 
 // THIS FUNCTION IS EXECUTED ONLY ONCE AS NODE-RED IS LOADING
 module.exports = function(RED) {
@@ -50,6 +51,8 @@ module.exports = function(RED) {
 
         if (node.server) node.Gun = Gun(node.server)
         else node.Gun = Gun()
+
+        node.Gun.get('test2').put(null)
 
     } // ---- End of nodeDefnConfig (initialised node instance) ---- //
 

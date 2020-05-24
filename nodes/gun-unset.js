@@ -17,9 +17,10 @@
 'use strict'
 
 // Node name must match this nodes html file name AND the nodeType in the html file
-const nodeName = 'gun-get-once'
+const nodeName = 'gun-unset'
 
 //const Gun = require('gun') // Not required, we use a single reference in the configuration node
+//const gunUnset = require('gun/lib/unset.js')
 
 // THIS FUNCTION IS EXECUTED ONLY ONCE AS NODE-RED IS LOADING
 module.exports = function(RED) {
@@ -29,7 +30,7 @@ module.exports = function(RED) {
      * @external RED
      * @see https://nodered.org/docs/creating-nodes/node-js
      **/
-    
+
     /** The node's instance definition.
      * THIS FUNCTION IS RUN ON (RE)DEPLOYMENT - FOR EACH INSTANCE OF THIS NODE TYPE
      * this/node var is rebuilt on every redeployment
@@ -46,12 +47,11 @@ module.exports = function(RED) {
         /** Create local copies of the node configuration (as defined in the .html file)
          *  NB: Best to use defaults here as well as in the html file for safety
          **/
+        node.soul  = config.soul || '' // Reference to a gun.get() for this soul
+
+        // Retrieve the config node
         node.gunconfig  = config.gunconfig || '' // Reference to a gun configuration node
         node.soul  = config.soul || '' // Name of the soul to use
-        node.singleOut  = config.singleOut
-
-        // Retrieve the reference to the Gun factory function
-        node.Gun = RED.nodes.getNode(node.gunconfig).Gun
 
         /** Handler function for node flow input events (when a node instance receives a msg from the flow)
          * @see https://nodered.org/blog/2019/09/20/node-done 
@@ -67,39 +67,22 @@ module.exports = function(RED) {
             // If msg is null, nothing will be sent
             if ( msg !== null ) {
                 if (node.Gun) {
-                    if ( node.singleOut === true ) {
-                        // Create a one time output & listen for future additions only - re-running will replace the previous listener
-                        // NB: Adding a new doc will produce TWO outputs. 1 for the soul and one for the new document.
-                        node.Gun.get(node.soul).once(function(value, key){
-                            send({
-                                'topic': node.soul,
-                                //TODO Probably need to allow this to be configured in the front-end
-                                'payload': {
-                                    'soul': node.soul,
-                                    'key': key,
-                                    'value': value,
-                                },
-                            })
-                        })
-                    } else {
-                        // Create a one time output & listen for future additions only - re-running will replace the previous listener
-                        node.Gun.get(node.soul).map().once(function(value, key){
-                            send({
-                                'topic': node.soul,
-                                //TODO Probably need to allow this to be configured in the front-end
-                                'payload': {
-                                    'soul': node.soul,
-                                    'key': key,
-                                    'value': value,
-                                },
-                            })
-                        })
-                    }
-                } else {
-                    console.log('GUN-GET-ONCE No Gun Factory', node.Gun)
-                }
+                    node.Gun.get(node.soul).put(null)
 
+                    send({
+                        'topic': node.soul,
+                        'payload': 'Unset'
+                    })
+                } else {
+                    console.log('GUN-UNSET No Gun Factory', node.Gun)
+                }
             }
+
+            //One-off data dump for debugging only
+            node.Gun.get(node.soul).once(function(item, itemId){
+                console.log(`[GUN-SET:once] ${node.soul}: ${itemId}=`, item)
+            })
+            node.Gun.get(node.soul).off()
 
             done()
 
