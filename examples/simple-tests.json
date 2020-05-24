@@ -1,0 +1,1043 @@
+[
+    {
+        "id": "8c238839.7283e8",
+        "type": "tab",
+        "label": "Gun.js Tests",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "674ccc55.7b53d4",
+        "type": "gun-get",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "soul": "test3",
+        "x": 120,
+        "y": 140,
+        "wires": [
+            [
+                "4e9892bc.55e42c"
+            ]
+        ]
+    },
+    {
+        "id": "4e9892bc.55e42c",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 690,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "956f71ab.57077",
+        "type": "gun-put-set",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "test3",
+        "path": "",
+        "set": false,
+        "x": 490,
+        "y": 520,
+        "wires": [
+            [
+                "3e00e185.de11ae"
+            ]
+        ]
+    },
+    {
+        "id": "3e00e185.de11ae",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 690,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "95694e7c.77ae8",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "[1,2,3]",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 520,
+        "wires": [
+            [
+                "956f71ab.57077"
+            ]
+        ]
+    },
+    {
+        "id": "3d410b2d.14a174",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "{\"one\":1,\"two\": { \"A\": 2, \"B\": 3} }",
+        "topic": "",
+        "payload": "{\"one\":1,\"two\":{\"A\":2,\"B\":{\"X\":\"doe\",\"Y\":\"ray\"}}}",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 210,
+        "y": 600,
+        "wires": [
+            [
+                "956f71ab.57077"
+            ]
+        ]
+    },
+    {
+        "id": "88515841.6a40b8",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "Just some text",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 160,
+        "y": 560,
+        "wires": [
+            [
+                "956f71ab.57077"
+            ]
+        ]
+    },
+    {
+        "id": "23b6eb2e.2a0ee4",
+        "type": "gun-get-once",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "test3",
+        "path": "",
+        "singleOut": true,
+        "rawOut": false,
+        "x": 350,
+        "y": 280,
+        "wires": [
+            [
+                "765375bb.f2d2dc"
+            ]
+        ]
+    },
+    {
+        "id": "765375bb.f2d2dc",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 690,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "fcbd3552.b44518",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 95,
+        "y": 280,
+        "wires": [
+            [
+                "23b6eb2e.2a0ee4"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "32811971.abb886",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "Set vs Put",
+        "info": "On a root/top-level document:\n\n* Set with an object creates a single document with 2 properties and random key - Put creates two documents with keys of the object top-level property names.\n\n* Put with a scalar will not do anything because no key is available. Set does work because it creates a random key.",
+        "x": 520,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "216039df.978596",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "TODO",
+        "info": "* use .off() to stop this from creating a listener and only get triggered on input.",
+        "x": 190,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "efac55f8.ab4cf8",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "TODO",
+        "info": "",
+        "x": 230,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "75041178.1b3",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "Info",
+        "info": "## Using `.on` instead of `.map.on`\n\n* returns a SINGLE record for the soul instead of 1 for each document.\n* Does NOT output anything when a document is added/changed because the whole soul would need to be changed to trigger an update.",
+        "x": 570,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "abd816af.1d08f8",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "Overall TODO",
+        "info": "* Enable inner changes/subscriptions instead of just the soul-level.",
+        "x": 470,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "301ef3bf.dd02ac",
+        "type": "gun-put-set",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "test3",
+        "path": "I/Am/a/path",
+        "set": false,
+        "x": 520,
+        "y": 840,
+        "wires": [
+            [
+                "aec931e2.61a29"
+            ]
+        ]
+    },
+    {
+        "id": "aec931e2.61a29",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 710,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "3b53894b.ccb516",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "[1,2,3]",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 840,
+        "wires": [
+            [
+                "301ef3bf.dd02ac"
+            ]
+        ]
+    },
+    {
+        "id": "baf1685f.1c42f8",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "{\"one\":1,\"two\": { \"A\": 2, \"B\": 3} }",
+        "topic": "",
+        "payload": "{\"one\":1,\"two\": { \"A\": 2, \"B\": 3} }",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 210,
+        "y": 920,
+        "wires": [
+            [
+                "301ef3bf.dd02ac"
+            ]
+        ]
+    },
+    {
+        "id": "8625e80f.886dd8",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "Just some text",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 160,
+        "y": 880,
+        "wires": [
+            [
+                "301ef3bf.dd02ac"
+            ]
+        ]
+    },
+    {
+        "id": "e9acf8f.4fdca08",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "[1,2,3]",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 660,
+        "wires": [
+            [
+                "c7b41e28.8f15a"
+            ]
+        ]
+    },
+    {
+        "id": "84d0aa59.d80218",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "{\"one\":1,\"two\": { \"A\": 2, \"B\": 3} }",
+        "topic": "",
+        "payload": "{\"one\":1,\"two\": { \"A\": 2, \"B\": 3} }",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 210,
+        "y": 740,
+        "wires": [
+            [
+                "c7b41e28.8f15a"
+            ]
+        ]
+    },
+    {
+        "id": "4fb6d38c.aa2fdc",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "Just some text",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 160,
+        "y": 700,
+        "wires": [
+            [
+                "c7b41e28.8f15a"
+            ]
+        ]
+    },
+    {
+        "id": "c7b41e28.8f15a",
+        "type": "gun-put-set",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "test3",
+        "path": "",
+        "set": true,
+        "x": 490,
+        "y": 660,
+        "wires": [
+            [
+                "22e056f3.d86aba"
+            ]
+        ]
+    },
+    {
+        "id": "22e056f3.d86aba",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 710,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "ba054969.a23018",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "[1,2,3]",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 130,
+        "y": 980,
+        "wires": [
+            [
+                "878b2c73.f9179"
+            ]
+        ]
+    },
+    {
+        "id": "745768da.3d2288",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "{\"one\":1,\"two\": { \"A\": 2, \"B\": 3} }",
+        "topic": "",
+        "payload": "{\"one\":1,\"two\": { \"A\": 2, \"B\": 3} }",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 210,
+        "y": 1060,
+        "wires": [
+            [
+                "878b2c73.f9179"
+            ]
+        ]
+    },
+    {
+        "id": "ca1c4ad9.982628",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "Just some text",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 160,
+        "y": 1020,
+        "wires": [
+            [
+                "878b2c73.f9179"
+            ]
+        ]
+    },
+    {
+        "id": "878b2c73.f9179",
+        "type": "gun-put-set",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "test3",
+        "path": "Also/a/path",
+        "set": true,
+        "x": 520,
+        "y": 980,
+        "wires": [
+            [
+                "915d45ba.02aea8"
+            ]
+        ]
+    },
+    {
+        "id": "915d45ba.02aea8",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 710,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "cc2ce5ec.945aa8",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "---- PUT/SET deep in the graph ----",
+        "info": "",
+        "x": 220,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "4c8fe2f0.08969c",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "---- PUT/SET at top level of graph (db) ----",
+        "info": "",
+        "x": 240,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "de73cd60.e9d3",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "---- GET.ONCE - Also triggers on new sub-elements ----",
+        "info": "",
+        "x": 260,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "9f4b082e.70de08",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "---- GET.ON - listen for changes ----",
+        "info": "",
+        "x": 200,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "825164d6.4ed628",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "---- How to delete ALL Gun.js data ----",
+        "info": "Look for the folder called `radata`\nin your `userDir` folder (normally `~/.node-red`).\n\nYou can delete that folder, Gun will recreate it\nas needed.\n\n**WARNING**: This will permanently delete _ALL_\nlocally held data. You probably only want to do\nthat after you have done some testing.",
+        "x": 770,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "c83116bd.ab72f8",
+        "type": "gun-get-once",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "test3",
+        "path": "two",
+        "singleOut": true,
+        "rawOut": true,
+        "x": 360,
+        "y": 320,
+        "wires": [
+            [
+                "87f9eadf.4a8588"
+            ]
+        ]
+    },
+    {
+        "id": "87f9eadf.4a8588",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 690,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "2cafe2c7.a1c2de",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 95,
+        "y": 320,
+        "wires": [
+            [
+                "c83116bd.ab72f8"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "b949ed5c.7cffc",
+        "type": "gun-get",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "soul": "test3",
+        "x": 120,
+        "y": 180,
+        "wires": [
+            [
+                "ffaad0b0.1e02b"
+            ]
+        ]
+    },
+    {
+        "id": "ffaad0b0.1e02b",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 690,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "8dd37ad0.03f4d8",
+        "type": "gun-get-once",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "test3",
+        "path": "two/B",
+        "singleOut": true,
+        "rawOut": true,
+        "x": 370,
+        "y": 360,
+        "wires": [
+            [
+                "f8e5265c.eee328"
+            ]
+        ]
+    },
+    {
+        "id": "f8e5265c.eee328",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 690,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "c6348f66.3f9e1",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 95,
+        "y": 360,
+        "wires": [
+            [
+                "8dd37ad0.03f4d8"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "7f11ef90.0b9a3",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "<- WHY DOESN'T THIS WORK?",
+        "info": "If you use the get-once above it, you can see the data is there.",
+        "x": 930,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "1b137842.ba6218",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "{\"hi\":\"there 1\"}",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 150,
+        "y": 1200,
+        "wires": [
+            [
+                "18e4196c.dbb287"
+            ]
+        ]
+    },
+    {
+        "id": "18e4196c.dbb287",
+        "type": "gun-put-set",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "test3",
+        "path": "ZZ",
+        "set": false,
+        "x": 380,
+        "y": 1200,
+        "wires": [
+            [
+                "7887bbe2.72cbf4"
+            ]
+        ]
+    },
+    {
+        "id": "7887bbe2.72cbf4",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 710,
+        "y": 1200,
+        "wires": []
+    },
+    {
+        "id": "f6b5a100.9fa03",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "{\"hi\":\"there 2\"}",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 150,
+        "y": 1240,
+        "wires": [
+            [
+                "a11e38ff.1837c8"
+            ]
+        ]
+    },
+    {
+        "id": "a11e38ff.1837c8",
+        "type": "gun-put-set",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "test3",
+        "path": "ZZ/aa",
+        "set": false,
+        "x": 390,
+        "y": 1240,
+        "wires": [
+            [
+                "5b2cb419.b2df7c"
+            ]
+        ]
+    },
+    {
+        "id": "5b2cb419.b2df7c",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 710,
+        "y": 1240,
+        "wires": []
+    },
+    {
+        "id": "c798150c.c36fa8",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "{\"hi\":\"there 3\"}",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 150,
+        "y": 1280,
+        "wires": [
+            [
+                "9c30a826.144358"
+            ]
+        ]
+    },
+    {
+        "id": "9c30a826.144358",
+        "type": "gun-put-set",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "test3",
+        "path": "ZZ/aa/A1",
+        "set": false,
+        "x": 400,
+        "y": 1280,
+        "wires": [
+            [
+                "924caa6.0f90258"
+            ]
+        ]
+    },
+    {
+        "id": "924caa6.0f90258",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "x": 710,
+        "y": 1280,
+        "wires": []
+    },
+    {
+        "id": "345ee0c0.113ee",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 95,
+        "y": 1340,
+        "wires": [
+            [
+                "85645cf8.0e5c"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "85645cf8.0e5c",
+        "type": "gun-get-once",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "test3",
+        "path": "ZZ",
+        "singleOut": true,
+        "rawOut": true,
+        "x": 400,
+        "y": 1340,
+        "wires": [
+            [
+                "f3a03c85.4210a"
+            ]
+        ]
+    },
+    {
+        "id": "f3a03c85.4210a",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 730,
+        "y": 1340,
+        "wires": []
+    },
+    {
+        "id": "eff760f3.a7567",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 95,
+        "y": 1380,
+        "wires": [
+            [
+                "f21e9237.3611e"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "f21e9237.3611e",
+        "type": "gun-get-once",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "test3",
+        "path": "ZZ/aa",
+        "singleOut": true,
+        "rawOut": true,
+        "x": 410,
+        "y": 1380,
+        "wires": [
+            [
+                "cba193ac.c53db"
+            ]
+        ]
+    },
+    {
+        "id": "cba193ac.c53db",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 730,
+        "y": 1380,
+        "wires": []
+    },
+    {
+        "id": "2ee948a7.c89828",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 95,
+        "y": 1420,
+        "wires": [
+            [
+                "8f530651.332858"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "8f530651.332858",
+        "type": "gun-get-once",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "test3",
+        "path": "ZZ/aa/A1",
+        "singleOut": true,
+        "rawOut": true,
+        "x": 420,
+        "y": 1420,
+        "wires": [
+            [
+                "585b01f4.69e4f"
+            ]
+        ]
+    },
+    {
+        "id": "585b01f4.69e4f",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 730,
+        "y": 1420,
+        "wires": []
+    },
+    {
+        "id": "4249ffa9.6a893",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "Something isn't working!",
+        "info": "The first level put seems OK.\n\nBut none of the others.",
+        "x": 170,
+        "y": 1160,
+        "wires": []
+    },
+    {
+        "id": "dbbc7abe.617de8",
+        "type": "gun-config",
+        "z": "",
+        "server": ""
+    }
+]
