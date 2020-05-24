@@ -52,8 +52,6 @@ module.exports = function(RED) {
         if (node.server) node.Gun = Gun(node.server)
         else node.Gun = Gun()
 
-        node.Gun.get('test2').put(null)
-
     } // ---- End of nodeDefnConfig (initialised node instance) ---- //
 
     /** Register the node by name. This must be called before overriding any of the node functions.

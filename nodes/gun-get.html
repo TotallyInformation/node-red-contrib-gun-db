@@ -28,12 +28,22 @@
             category: 'storage', // Palette category
 
             defaults: {
-                name: { value: '', required: false, },
-                gunconfig: { value: '', required: true, type: 'gun-config', },
-                soul: { value: '', required: true, }
+                // Just a name, show in Editor if used. No impact on processing.
+                name:      { value: '',    required: false, },
+                // Reference to config node - gives access to Gun() reference
+                gunconfig: { value: '',    required: true,  type: 'gun-config', },
+                // Specify top-level element to target
+                db:        { value: '',    required: true,  },
+                // slash path added to db to specify the "soul" to target
+                path:      { value: '',    required: false, },
+                // Single output msg or multiple?
+                singleOut: { value: false, required: false, },
+                // Show raw Gun return data in payload or remove the _ object (default)?
+                rawOut:    { value: false, required: false, },
             },
 
-            label: function() { return this.name ? this.name : `GET(${this.soul})` },
+            label: function() { return this.name ? this.name : `ON(${this.db}/${this.path})` },
+            paletteLabel: 'Gun: Listen',
             icon: 'font-awesome/fa-arrow-circle-left',
             inputs:0,
             outputs:1,
@@ -59,17 +69,43 @@
     </div>
 
     <div class="form-row">
-        <label for="node-input-soul"><i class="fa fa-database"></i> Soul</label>
-        <input type="text" id="node-input-soul">
+        <label for="node-input-db"><i class="fa fa-database"></i> Db</label>
+        <input type="text" id="node-input-db">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-path"><i class="fa fa-code-fork"></i> Path</label>
+        <input type="text" id="node-input-path">
     </div>
 
     <div class="form-tips">
-        The "soul" is passed to a <code>Gun().get()</code>, it can only be a root node right now.
-        Eventually you will be able to specify something deeper.
+        Db and Path are combined to get the "soul" to target.
+        See Help panel and <a href="https://gun.eco/docs/" target="_blank">Gun.js docs</a> for more information on paths.
+    </div>
+
+    <div class="form-row">
+        <input type="checkbox" id="node-input-singleOut" style="display:inline-block;width:auto;vertical-align:top;margin-top:5px;">
+        <label for="node-input-singleOut" style="width: 90%;">&nbsp;Output a single msg rather than one for each document?</label>
+    </div>
+
+    <div class="form-tips">
+        If selected, a single output msg is produced containing all documents for the soul.
+    </div>
+
+    <div class="form-row">
+        <input type="checkbox" id="node-input-rawOut" style="display:inline-block;width:auto;vertical-align:top;margin-top:5px;">
+        <label for="node-input-rawOut" style="width: 90%;">&nbsp;Output the <code>_</code> Gun object as well as the actual data?</label>
+    </div>
+
+    <div class="form-tips">
+        If selected, the output payload will include the <code>_</code> object that includes the key (<code>#</code>) and the update timestamps (<code>></code>).
     </div>
 
 </script>
 
 <script type="text/html" data-help-name="gun-get">
-    <p>Subscribe to a Gun.js "soul". A msg is sent for every record update.</p>
+    <p>
+        Listen for changes to the contents of a Gun.js soul & output msg's for each change.
+        Note that only 1 level of the graph is retrieved. Subsequent levels only return a soul name. See the Gun.js docs for reasons.
+    </p>
 </script>

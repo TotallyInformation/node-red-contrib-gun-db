@@ -46,26 +46,45 @@ module.exports = function(RED) {
         /** Create local copies of the node configuration (as defined in the .html file)
          *  NB: Best to use defaults here as well as in the html file for safety
          **/
-        node.gunconfig  = config.gunconfig || '' // Reference to a gun configuration node
-        node.soul  = config.soul || '' // Name of the soul to use
+        // Just a name, show in Editor if used. No impact on processing.
+        node.name = config.name || ''
+        // Reference to config node - gives access to Gun() reference
+        node.gunconfig = config.gunconfig
+        // Specify top-level element to target
+        node.db = config.db || ''
+        // slash path added to db to specify the "soul" to target
+        node.path = config.path || ''
+        // Single output msg or multiple?
+        node.singleOut  = config.singleOut // default = false
+        // Show raw Gun return data in payload or remove the _ object (default?
+        node.rawOut = config.rawOut // default = false
+
+        // Add full soul reference
+        node.soul = node.path !== '' ? `${node.db}/${node.path}` : node.db
 
         // Retrieve the reference to the Gun factory function
         node.Gun = RED.nodes.getNode(node.gunconfig).Gun
 
         if (node.Gun) {
-            // Create a listener for any change events on this soul - re-running will replace the previous listener
-            //TODO Consider whether to consolidate output before sending (or allow that in a flag)
-            node.Gun.get(node.soul).map().on(function(value, key){
-                node.send({
-                    'topic': node.soul,
-                    //TODO Probably need to allow this to be configured in the front-end
-                    'payload': {
-                        'soul': node.soul,
-                        'key': key,
-                        'value': value,
-                    },
+            let db = node.Gun.get(node.db)
+            let data = node.path === '' ? db : db.get(node.path)
+
+            let msg = {}
+
+            if ( node.singleOut === true ) {
+                data.on(function(value, key){
+                    msg.topic = node.soul
+                    console.log(node.rawOut, value, removeGunUnderscore(value))
+                    msg.payload = node.rawOut !== true ? removeGunUnderscore(value) : value
+                    node.send(msg)
                 })
-            })
+            } else {
+                data.map().on(function(value, key){
+                    msg.topic = node.soul
+                    msg.payload = node.rawOut !== true ? removeGunUnderscore(value) : value
+                    node.send(msg)
+                })
+            }
         } else {
             console.log('GUN-GET No Gun Factory', node.Gun)
         }
@@ -79,5 +98,25 @@ module.exports = function(RED) {
 
 
 } // ---- End of module.exports ---- //
+
+/** Remove Gun.js `_` object from returned data
+ * @param {*} data Data returned from a Gun.js ON or ONCE function
+ * @returns {*} Data with _ property removed
+ */
+function removeGunUnderscore(data) {
+    let payload = {}
+    // If input is an object, remove a top-level property called "_"
+    if (Object.prototype.toString.call(data) === '[object Object]') {
+        Object.entries(data).forEach( ([key, value]) => {
+            if (key !== '_') {
+                payload[key] = value
+            }
+        })
+    } else {
+        payload = data
+    }
+
+    return payload
+}
 
 // EOF

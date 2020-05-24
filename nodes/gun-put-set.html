@@ -18,8 +18,12 @@
     'use strict'
 
     ;(function () {
-        const nodeName = 'gun-get-once'
+        // AKA node-type (in docs). Must match the html/js filenames and the nodeName in the .js file
+        // @see https://nodered.org/docs/creating-nodes/node-html#node-type
+        const nodeName = 'gun-put-set'
 
+        // Default configuration settings (node definition) for this node type
+        // @see https://nodered.org/docs/creating-nodes/node-html#node-definition
         const nodeConfig = {
             category: 'storage', // Palette category
 
@@ -32,27 +36,27 @@
                 db:        { value: '',    required: true,  },
                 // slash path added to db to specify the "soul" to target
                 path:      { value: '',    required: false, },
-                // Single output msg or multiple?
-                singleOut: { value: false, required: false, },
-                // Show raw Gun return data in payload or remove the _ object (default)?
-                rawOut:    { value: false, required: false, },
+                // use set instead of put?
+                set:       { value: false, required: false, },
             },
 
             label: function() {
-                return this.name ? this.name : `GET-ONCE(${this.db}/${this.path})`
+                return this.name ? this.name : `${this.set===true?'SET':'PUT'}(${this.db}/${this.path})`
             },
-            paletteLabel: 'Gun: get once',
-            icon: 'font-awesome/fa-arrow-circle-o-right',
-            inputs:  1,
-            outputs: 1,
+            paletteLabel: 'Gun: put/set',
+            icon: 'font-awesome/fa-arrow-circle-up',
+            inputs:1,
+            outputs:1,
         }
 
+        // Register the node type in the palette in the Node-RED admin interface
         RED.nodes.registerType( nodeName, nodeConfig )
     })()
 </script>
 
-<script type="text/html" data-template-name="gun-get-once">
+<script type="text/html" data-template-name="gun-put-set">
 
+    <!-- Node Name -->
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name">
@@ -73,41 +77,21 @@
         <input type="text" id="node-input-path">
     </div>
 
+    <div class="form-row">
+        <input type="checkbox" id="node-input-set" style="display:inline-block;width:auto;vertical-align:top;padding-top:5px;">
+        <label for="node-input-set" style="width: 90%;">&nbsp;Use SET instead of PUT?</label>
+    </div>
+
     <div class="form-tips">
         Db and Path are combined to get the "soul" to target.
         Leave Path blank to allow incoming msg.topic to set it.
         See Help panel and <a href="https://gun.eco/docs/" target="_blank">Gun.js docs</a> for more information on paths.
     </div>
 
-    <div class="form-tips">
-        Note that the input is purely a trigger. Nothing from the input is sent to the output.
-        Also note that this node will also fire if a new element is added to the db.
-    </div>
-
-    <div class="form-row">
-        <input type="checkbox" id="node-input-singleOut" style="display:inline-block;width:auto;vertical-align:top;margin-top:5px;">
-        <label for="node-input-singleOut" style="width: 90%;">&nbsp;Output a single msg rather than one for each document?</label>
-    </div>
-
-    <div class="form-tips">
-        If selected, a single output msg is produced containing all documents for the soul.
-    </div>
-
-    <div class="form-row">
-        <input type="checkbox" id="node-input-rawOut" style="display:inline-block;width:auto;vertical-align:top;margin-top:5px;">
-        <label for="node-input-rawOut" style="width: 90%;">&nbsp;Output the <code>_</code> Gun object as well as the actual data?</label>
-    </div>
-
-    <div class="form-tips">
-        If selected, the output payload will include the <code>_</code> object that includes the key (<code>#</code>) and the update timestamps (<code>></code>).
-    </div>
-
 </script>
 
-<script type="text/html" data-help-name="gun-get-once">
+<script type="text/html" data-help-name="gun-put-set">
     <p>
-        Get the contents of a Gun.js soul once.
-        Other outputs will happen if new sub-elements are added.
-        Note that only 1 level of the graph is retrieved. Subsequent levels only return a soul name. See the Gun.js docs for reasons.
+        Send msg payload to a Gun.js "Soul" using either PUT or SET.
     </p>
 </script>

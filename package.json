@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-gun-db",
-  "version": "0.0.1-dev5",
+  "version": "0.0.1-dev6",
   "description": "Collection of nodes to use Gun.js with Node-RED **WARNING: CONCEPT STAGE ONLY**",
   "scripts": {
     "postinstall": "node ./bin/postinstall",
@@ -26,11 +26,9 @@
     "version": ">=1",
     "nodes": {
         "Gun Config": "nodes/gun-config.js",
-        "Gun Put": "nodes/gun-put.js",
-        "Gun Set": "nodes/gun-set.js",
-        "Gun In": "nodes/gun-get.js",
-        "Gun Out": "nodes/gun-get-once.js",
-        "Gun Unset": "nodes/gun-unset.js"
+        "Gun Update": "nodes/gun-put-set.js",
+        "Gun Listen": "nodes/gun-get.js",
+        "Gun Out": "nodes/gun-get-once.js"
     },
     "notyetnodes": {}
   },
@@ -54,7 +52,7 @@
     "maintained node versions",
     "last 2 versions",
     "not dead",
-    "not ie < 11"
+    "not ie 11"
   ],
   "keywords": [
     "xnode-red",

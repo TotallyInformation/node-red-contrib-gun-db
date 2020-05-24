@@ -17,10 +17,9 @@
 'use strict'
 
 // Node name must match this nodes html file name AND the nodeType in the html file
-const nodeName = 'gun-unset'
+const nodeName = 'gun-put-set'
 
 //const Gun = require('gun') // Not required, we use a single reference in the configuration node
-//const gunUnset = require('gun/lib/unset.js')
 
 // THIS FUNCTION IS EXECUTED ONLY ONCE AS NODE-RED IS LOADING
 module.exports = function(RED) {
@@ -47,11 +46,24 @@ module.exports = function(RED) {
         /** Create local copies of the node configuration (as defined in the .html file)
          *  NB: Best to use defaults here as well as in the html file for safety
          **/
-        node.soul  = config.soul || '' // Reference to a gun.get() for this soul
+        // Just a name, show in Editor if used. No impact on processing.
+        node.name = config.name || ''
+        // Reference to config node - gives access to Gun() reference
+        node.gunconfig = config.gunconfig
+        // Specify top-level element to target
+        node.db = config.db || ''
+        // slash path added to db to specify the "soul" to target
+        node.path = config.path || ''
+        // use set instead of put?
+        node.set = config.set // default = false
 
-        // Retrieve the config node
-        node.gunconfig  = config.gunconfig || '' // Reference to a gun configuration node
-        node.soul  = config.soul || '' // Name of the soul to use
+        // Add full soul reference
+        node.soul = node.path !== '' ? `${node.db}/${node.path}` : node.db
+        // Add update type
+        node.type = node.set !== true ? 'PUT' : 'SET'
+
+        // Retrieve the reference to the Gun factory function
+        node.Gun = RED.nodes.getNode(node.gunconfig).Gun
 
         /** Handler function for node flow input events (when a node instance receives a msg from the flow)
          * @see https://nodered.org/blog/2019/09/20/node-done 
@@ -61,28 +73,30 @@ module.exports = function(RED) {
          **/
         function nodeInputHandler(msg, send, done) {
             
-            // Retrieve the reference to the Gun factory function
-            node.Gun = RED.nodes.getNode(node.gunconfig).Gun
-
             // If msg is null, nothing will be sent
             if ( msg !== null ) {
                 if (node.Gun) {
-                    node.Gun.get(node.soul).put(null)
+                    let db = node.Gun.get(node.db)
+                    let data = node.path === '' ? db : db.get(node.path)
 
-                    send({
-                        'topic': node.soul,
-                        'payload': 'Unset'
-                    })
+                    if ( node.set !== true ) {
+                        /** Put values cannot be an array or a scalar (must be an object)
+                         * TODO Force this to be an object
+                         */
+                        data.put(msg.payload)
+                    } else {
+                        // Use SET instead of PUT
+                        data.set(msg.payload)
+                    }
+
+                    msg.topic = node.soul
+                    msg.updateType = node.type
+                    send(msg)
+
                 } else {
-                    console.log('GUN-UNSET No Gun Factory', node.Gun)
+                    console.log('GUN-PUT-GET No Gun Factory', node.Gun)
                 }
             }
-
-            //One-off data dump for debugging only
-            node.Gun.get(node.soul).once(function(item, itemId){
-                console.log(`[GUN-SET:once] ${node.soul}: ${itemId}=`, item)
-            })
-            node.Gun.get(node.soul).off()
 
             done()
 
