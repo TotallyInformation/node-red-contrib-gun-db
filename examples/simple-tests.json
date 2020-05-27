@@ -4,7 +4,7 @@
         "type": "tab",
         "label": "Gun.js Tests",
         "disabled": false,
-        "info": ""
+        "info": "This flow tab contains a number of tests for putting data into a Gun.js database and for retrieving it and/or listening for changes to data."
     },
     {
         "id": "674ccc55.7b53d4",
@@ -12,7 +12,10 @@
         "z": "8c238839.7283e8",
         "name": "",
         "gunconfig": "dbbc7abe.617de8",
-        "soul": "test3",
+        "db": "test3",
+        "path": "",
+        "singleOut": false,
+        "rawOut": false,
         "x": 120,
         "y": 140,
         "wires": [
@@ -193,26 +196,6 @@
         "wires": []
     },
     {
-        "id": "216039df.978596",
-        "type": "comment",
-        "z": "8c238839.7283e8",
-        "name": "TODO",
-        "info": "* use .off() to stop this from creating a listener and only get triggered on input.",
-        "x": 190,
-        "y": 260,
-        "wires": []
-    },
-    {
-        "id": "efac55f8.ab4cf8",
-        "type": "comment",
-        "z": "8c238839.7283e8",
-        "name": "TODO",
-        "info": "",
-        "x": 230,
-        "y": 120,
-        "wires": []
-    },
-    {
         "id": "75041178.1b3",
         "type": "comment",
         "z": "8c238839.7283e8",
@@ -220,16 +203,6 @@
         "info": "## Using `.on` instead of `.map.on`\n\n* returns a SINGLE record for the soul instead of 1 for each document.\n* Does NOT output anything when a document is added/changed because the whole soul would need to be changed to trigger an update.",
         "x": 570,
         "y": 260,
-        "wires": []
-    },
-    {
-        "id": "abd816af.1d08f8",
-        "type": "comment",
-        "z": "8c238839.7283e8",
-        "name": "Overall TODO",
-        "info": "* Enable inner changes/subscriptions instead of just the soul-level.",
-        "x": 470,
-        "y": 60,
         "wires": []
     },
     {
@@ -553,8 +526,8 @@
         "type": "comment",
         "z": "8c238839.7283e8",
         "name": "---- How to delete ALL Gun.js data ----",
-        "info": "Look for the folder called `radata`\nin your `userDir` folder (normally `~/.node-red`).\n\nYou can delete that folder, Gun will recreate it\nas needed.\n\n**WARNING**: This will permanently delete _ALL_\nlocally held data. You probably only want to do\nthat after you have done some testing.",
-        "x": 770,
+        "info": "Look for the folder called `_gun`\nin your `userDir` folder (normally `~/.node-red`).\n\nYou can delete that folder, Gun will recreate it\nas needed.\n\n**WARNING**: This will permanently delete _ALL_\nlocally held data. You probably only want to do\nthat after you have done some testing.",
+        "x": 590,
         "y": 40,
         "wires": []
     },
@@ -618,8 +591,11 @@
         "z": "8c238839.7283e8",
         "name": "",
         "gunconfig": "dbbc7abe.617de8",
-        "soul": "test3",
-        "x": 120,
+        "db": "test3",
+        "path": "two",
+        "singleOut": false,
+        "rawOut": false,
+        "x": 130,
         "y": 180,
         "wires": [
             [
@@ -695,16 +671,6 @@
             ]
         ],
         "l": false
-    },
-    {
-        "id": "7f11ef90.0b9a3",
-        "type": "comment",
-        "z": "8c238839.7283e8",
-        "name": "<- WHY DOESN'T THIS WORK?",
-        "info": "If you use the get-once above it, you can see the data is there.",
-        "x": 930,
-        "y": 360,
-        "wires": []
     },
     {
         "id": "1b137842.ba6218",
@@ -1028,10 +994,562 @@
         "id": "4249ffa9.6a893",
         "type": "comment",
         "z": "8c238839.7283e8",
-        "name": "Something isn't working!",
-        "info": "The first level put seems OK.\n\nBut none of the others.",
-        "x": 170,
+        "name": "--- Individually put deep objects ---",
+        "info": "",
+        "x": 200,
         "y": 1160,
+        "wires": []
+    },
+    {
+        "id": "9075d1e8.962c9",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "{\"System\":{\"PairingStatus\":\"Paired\",\"OverrideType\":\"Away\",\"TimeZoneOffset\":0,\"AutomaticDaylightSaving\":true,\"SystemMode\":\"Heat\",\"Version\":6,\"FotaEnabled\":true,\"ValveProtectionEnabled\":false,\"EcoModeEnabled\":true,\"AwayModeAffectsHotWater\":true,\"AwayModeSetPointLimit\":100,\"BoilerSettings\":{\"ControlType\":\"HeatSourceType_RelayControlled\",\"FuelType\":\"Gas\",\"CycleRate\":\"CPH_6\",\"OnOffHysteresis\":5},\"CoolingModeDefaultSetpoint\":210,\"CoolingAwayModeSetpointLimit\":240,\"ComfortModeEnabled\":false,\"PreheatTimeLimit\":10800,\"DegradedModeSetpointThreshold\":180,\"UnixTime\":1590571980,\"ActiveSystemVersion\":\"2.50.0-e091a4511d\",\"BrandName\":\"WiserHeat\",\"CloudConnectionStatus\":\"Connected\",\"LocalDateAndTime\":{\"Year\":2020,\"Month\":\"May\",\"Date\":27,\"Day\":\"Wednesday\",\"Time\":1033},\"HeatingButtonOverrideState\":\"Off\",\"HotWaterButtonOverrideState\":\"Off\",\"OpenThermConnectionStatus\":\"Disconnected\"},\"Cloud\":{\"Environment\":\"Prod\",\"DetailedPublishing\":false,\"EnableDiagnosticTelemetry\":false,\"WiserApiHost\":\"api-nl.wiserair.com\",\"BootStrapApiHost\":\"bootstrap.gl.struxurewarecloud.com\"},\"HeatingChannel\":[{\"id\":1,\"Name\":\"Channel-1\",\"RoomIds\":[1,2,3,4,5,6,7,8,9,10,11,12,13,14],\"PercentageDemand\":0,\"DemandOnOffOutput\":\"Off\",\"HeatingRelayState\":\"Off\",\"IsSmartValvePreventingDemand\":true}],\"Room\":[{\"id\":1,\"ScheduleId\":1,\"HeatingRate\":1200,\"SmartValveIds\":[38367],\"Name\":\"Living Room\",\"Mode\":\"Auto\",\"DemandType\":\"Modulating\",\"WindowDetectionActive\":true,\"ControlSequenceOfOperation\":\"HeatingOnly\",\"HeatingType\":\"HydronicRadiator\",\"CalculatedTemperature\":178,\"CurrentSetPoint\":100,\"PercentageDemand\":0,\"ControlOutputState\":\"Off\",\"WindowState\":\"Closed\",\"SetpointOrigin\":\"FromSchedule\",\"DisplayedSetPoint\":100,\"ScheduledSetPoint\":100,\"AwayModeSuppressed\":false,\"RoundedAlexaTemperature\":180,\"EffectiveMode\":\"Auto\",\"PercentageDemandForItrv\":0},{\"id\":2,\"ScheduleId\":2,\"HeatingRate\":1200,\"SmartValveIds\":[671],\"Name\":\"Kitchen\",\"Mode\":\"Auto\",\"DemandType\":\"Modulating\",\"WindowDetectionActive\":true,\"ControlSequenceOfOperation\":\"HeatingOnly\",\"HeatingType\":\"HydronicRadiator\",\"CalculatedTemperature\":181,\"CurrentSetPoint\":100,\"PercentageDemand\":0,\"ControlOutputState\":\"Off\",\"WindowState\":\"Closed\",\"SetpointOrigin\":\"FromSchedule\",\"DisplayedSetPoint\":100,\"ScheduledSetPoint\":100,\"RoundedAlexaTemperature\":180,\"EffectiveMode\":\"Auto\",\"PercentageDemandForItrv\":0},{\"id\":3,\"ScheduleId\":3,\"HeatingRate\":1200,\"SmartValveIds\":[],\"Name\":\"Dining Room\",\"Mode\":\"Auto\",\"WindowDetectionActive\":true,\"ControlSequenceOfOperation\":\"HeatingOnly\",\"HeatingType\":\"HydronicRadiator\",\"CalculatedTemperature\":-32768,\"CurrentSetPoint\":100,\"SetpointOrigin\":\"FromSchedule\",\"DisplayedSetPoint\":100,\"ScheduledSetPoint\":100,\"Invalid\":\"NothingAssigned\",\"EffectiveMode\":\"Auto\"},{\"id\":4,\"ScheduleId\":4,\"HeatingRate\":1200,\"Name\":\"Rear Hall\",\"Mode\":\"Auto\",\"WindowDetectionActive\":false,\"ControlSequenceOfOperation\":\"HeatingOnly\",\"HeatingType\":\"HydronicRadiator\",\"CalculatedTemperature\":-32768,\"CurrentSetPoint\":100,\"SetpointOrigin\":\"FromAwayMode\",\"DisplayedSetPoint\":100,\"ScheduledSetPoint\":160,\"Invalid\":\"NothingAssigned\",\"EffectiveMode\":\"Auto\"},{\"id\":5,\"ScheduleId\":5,\"HeatingRate\":1200,\"SmartValveIds\":[60159],\"Name\":\"Front Hall\",\"Mode\":\"Auto\",\"DemandType\":\"Modulating\",\"WindowDetectionActive\":true,\"ControlSequenceOfOperation\":\"HeatingOnly\",\"HeatingType\":\"HydronicRadiator\",\"CalculatedTemperature\":182,\"CurrentSetPoint\":100,\"PercentageDemand\":0,\"ControlOutputState\":\"Off\",\"WindowState\":\"Closed\",\"SetpointOrigin\":\"FromSchedule\",\"DisplayedSetPoint\":100,\"ScheduledSetPoint\":100,\"AwayModeSuppressed\":false,\"RoundedAlexaTemperature\":180,\"EffectiveMode\":\"Auto\",\"PercentageDemandForItrv\":0},{\"id\":6,\"ScheduleId\":6,\"HeatingRate\":1200,\"SmartValveIds\":[52963],\"Name\":\"Master Bedroom\",\"Mode\":\"Auto\",\"DemandType\":\"Modulating\",\"WindowDetectionActive\":true,\"ControlSequenceOfOperation\":\"HeatingOnly\",\"HeatingType\":\"HydronicRadiator\",\"CalculatedTemperature\":169,\"CurrentSetPoint\":100,\"PercentageDemand\":0,\"ControlOutputState\":\"Off\",\"WindowState\":\"Closed\",\"SetpointOrigin\":\"FromSchedule\",\"DisplayedSetPoint\":100,\"ScheduledSetPoint\":100,\"RoundedAlexaTemperature\":170,\"EffectiveMode\":\"Auto\",\"PercentageDemandForItrv\":0},{\"id\":7,\"ManualSetPoint\":175,\"OverrideType\":\"None\",\"ScheduleId\":7,\"HeatingRate\":1200,\"SmartValveIds\":[24616],\"Name\":\"Bedroom 2\",\"Mode\":\"Auto\",\"DemandType\":\"Modulating\",\"WindowDetectionActive\":true,\"ControlSequenceOfOperation\":\"HeatingOnly\",\"HeatingType\":\"HydronicRadiator\",\"CalculatedTemperature\":197,\"CurrentSetPoint\":-200,\"PercentageDemand\":0,\"ControlOutputState\":\"Off\",\"WindowState\":\"Closed\",\"SetpointOrigin\":\"FromSchedule\",\"DisplayedSetPoint\":-200,\"ScheduledSetPoint\":-200,\"RoundedAlexaTemperature\":195,\"EffectiveMode\":\"Auto\",\"PercentageDemandForItrv\":0},{\"id\":8,\"OverrideType\":\"None\",\"ScheduleId\":8,\"HeatingRate\":1200,\"SmartValveIds\":[60160],\"Name\":\"Office\",\"Mode\":\"Auto\",\"DemandType\":\"Modulating\",\"WindowDetectionActive\":true,\"ControlSequenceOfOperation\":\"HeatingOnly\",\"HeatingType\":\"HydronicRadiator\",\"CalculatedTemperature\":197,\"CurrentSetPoint\":-200,\"PercentageDemand\":0,\"ControlOutputState\":\"Off\",\"WindowState\":\"Closed\",\"SetpointOrigin\":\"FromSchedule\",\"DisplayedSetPoint\":-200,\"ScheduledSetPoint\":-200,\"RoundedAlexaTemperature\":195,\"EffectiveMode\":\"Auto\",\"PercentageDemandForItrv\":0},{\"id\":9,\"ScheduleId\":9,\"HeatingRate\":1200,\"Name\":\"Loft main\",\"Mode\":\"Auto\",\"WindowDetectionActive\":false,\"ControlSequenceOfOperation\":\"HeatingOnly\",\"HeatingType\":\"HydronicRadiator\",\"CalculatedTemperature\":-32768,\"CurrentSetPoint\":100,\"SetpointOrigin\":\"FromAwayMode\",\"DisplayedSetPoint\":100,\"ScheduledSetPoint\":150,\"Invalid\":\"NothingAssigned\",\"EffectiveMode\":\"Auto\"},{\"id\":10,\"ScheduleId\":10,\"HeatingRate\":1200,\"Name\":\"Loft box\",\"Mode\":\"Auto\",\"WindowDetectionActive\":false,\"ControlSequenceOfOperation\":\"HeatingOnly\",\"HeatingType\":\"HydronicRadiator\",\"CalculatedTemperature\":-32768,\"CurrentSetPoint\":100,\"SetpointOrigin\":\"FromAwayMode\",\"DisplayedSetPoint\":100,\"ScheduledSetPoint\":160,\"Invalid\":\"NothingAssigned\",\"EffectiveMode\":\"Auto\"},{\"id\":13,\"ScheduleId\":13,\"HeatingRate\":1200,\"UfhRelayIds\":[],\"Name\":\"Landing\",\"Mode\":\"Auto\",\"WindowDetectionActive\":false,\"ControlSequenceOfOperation\":\"HeatingOnly\",\"HeatingType\":\"HydronicRadiator\",\"CalculatedTemperature\":-32768,\"CurrentSetPoint\":100,\"SetpointOrigin\":\"FromAwayMode\",\"DisplayedSetPoint\":100,\"ScheduledSetPoint\":160,\"Invalid\":\"NothingAssigned\",\"EffectiveMode\":\"Auto\"},{\"id\":11,\"ScheduleId\":11,\"HeatingRate\":1200,\"RoomStatId\":14761,\"UfhRelayIds\":[],\"Name\":\"Bathroom \",\"Mode\":\"Auto\",\"DemandType\":\"Modulating\",\"WindowDetectionActive\":true,\"ControlSequenceOfOperation\":\"HeatingOnly\",\"HeatingType\":\"HydronicRadiator\",\"CalculatedTemperature\":185,\"CurrentSetPoint\":100,\"PercentageDemand\":0,\"ControlOutputState\":\"Off\",\"SetpointOrigin\":\"FromAwayMode\",\"DisplayedSetPoint\":100,\"ScheduledSetPoint\":140,\"AwayModeSuppressed\":false,\"RoundedAlexaTemperature\":185,\"EffectiveMode\":\"Auto\",\"PercentageDemandForItrv\":0},{\"id\":12,\"ScheduleId\":12,\"HeatingRate\":1200,\"UfhRelayIds\":[],\"Name\":\"Offshot\",\"Mode\":\"Auto\",\"WindowDetectionActive\":true,\"ControlSequenceOfOperation\":\"HeatingOnly\",\"HeatingType\":\"HydronicRadiator\",\"CalculatedTemperature\":-32768,\"CurrentSetPoint\":100,\"SetpointOrigin\":\"FromAwayMode\",\"DisplayedSetPoint\":100,\"ScheduledSetPoint\":160,\"Invalid\":\"NothingAssigned\",\"EffectiveMode\":\"Auto\"},{\"id\":14,\"ScheduleId\":14,\"HeatingRate\":1200,\"Name\":\"Bedroom 4\",\"Mode\":\"Auto\",\"WindowDetectionActive\":false,\"ControlSequenceOfOperation\":\"HeatingOnly\",\"HeatingType\":\"HydronicRadiator\",\"CalculatedTemperature\":-32768,\"CurrentSetPoint\":100,\"SetpointOrigin\":\"FromAwayMode\",\"DisplayedSetPoint\":100,\"ScheduledSetPoint\":150,\"Invalid\":\"NothingAssigned\",\"EffectiveMode\":\"Auto\"}],\"Device\":[{\"id\":0,\"NodeId\":0,\"ProductType\":\"Controller\",\"ProductIdentifier\":\"Controller\",\"ActiveFirmwareVersion\":\"2.50.0\",\"ModelIdentifier\":\"WT714R1S0902\",\"DeviceLockEnabled\":false,\"DisplayedSignalStrength\":\"VeryGood\",\"ReceptionOfController\":{\"Rssi\":-52},\"ReceptionOfDevice\":{\"Rssi\":0,\"Lqi\":255}},{\"id\":14761,\"NodeId\":14761,\"ProductType\":\"RoomStat\",\"ProductIdentifier\":\"RoomStat\",\"ActiveFirmwareVersion\":\"04E1000900042002\",\"ModelIdentifier\":\"Thermostat\",\"HardwareVersion\":\"1\",\"SerialNumber\":\"90FD9FFFFE62C32B\",\"ProductModel\":\"Thermostat\",\"OtaImageQueryCount\":0,\"LastOtaImageQueryCount\":2,\"ParentNodeId\":0,\"DeviceLockEnabled\":false,\"DisplayedSignalStrength\":\"VeryGood\",\"BatteryVoltage\":25,\"BatteryLevel\":\"Normal\",\"ReceptionOfController\":{\"Rssi\":-57,\"Lqi\":172},\"ReceptionOfDevice\":{\"Rssi\":-56,\"Lqi\":176}},{\"id\":671,\"NodeId\":7439,\"ProductType\":\"iTRV\",\"ProductIdentifier\":\"iTRV\",\"ActiveFirmwareVersion\":\"0201000000042002\",\"ModelIdentifier\":\"iTRV\",\"HardwareVersion\":\"0\",\"SerialNumber\":\"90FD9FFFFEAA5B44\",\"ProductModel\":\"iTRV\",\"OtaImageQueryCount\":0,\"LastOtaImageQueryCount\":1,\"ParentNodeId\":0,\"DeviceLockEnabled\":false,\"DisplayedSignalStrength\":\"VeryGood\",\"BatteryVoltage\":27,\"BatteryLevel\":\"OneThird\",\"ReceptionOfController\":{\"Rssi\":-40,\"Lqi\":240},\"ReceptionOfDevice\":{\"Rssi\":-39,\"Lqi\":244},\"PendingZigbeeMessageMask\":0},{\"id\":38367,\"NodeId\":38367,\"ProductType\":\"iTRV\",\"ProductIdentifier\":\"iTRV\",\"ActiveFirmwareVersion\":\"0201000000042002\",\"ModelIdentifier\":\"iTRV\",\"HardwareVersion\":\"0\",\"SerialNumber\":\"90FD9FFFFEAA5B78\",\"ProductModel\":\"iTRV\",\"OtaImageQueryCount\":0,\"LastOtaImageQueryCount\":1,\"ParentNodeId\":0,\"DeviceLockEnabled\":false,\"DisplayedSignalStrength\":\"Medium\",\"BatteryVoltage\":26,\"BatteryLevel\":\"Low\",\"ReceptionOfController\":{\"Rssi\":-71,\"Lqi\":116},\"ReceptionOfDevice\":{\"Rssi\":-64,\"Lqi\":144},\"PendingZigbeeMessageMask\":0},{\"id\":60160,\"NodeId\":63647,\"ProductType\":\"iTRV\",\"ProductIdentifier\":\"iTRV\",\"ActiveFirmwareVersion\":\"0201000000042002\",\"ModelIdentifier\":\"iTRV\",\"HardwareVersion\":\"0\",\"SerialNumber\":\"90FD9FFFFEC38450\",\"ProductModel\":\"iTRV\",\"OtaImageQueryCount\":0,\"LastOtaImageQueryCount\":1,\"ParentNodeId\":0,\"DeviceLockEnabled\":false,\"DisplayedSignalStrength\":\"Poor\",\"BatteryVoltage\":23,\"BatteryLevel\":\"Critical\",\"ReceptionOfController\":{\"Rssi\":-81,\"Lqi\":76},\"ReceptionOfDevice\":{\"Rssi\":-74,\"Lqi\":104},\"PendingZigbeeMessageMask\":0},{\"id\":60159,\"NodeId\":60159,\"ProductType\":\"iTRV\",\"ProductIdentifier\":\"iTRV\",\"ActiveFirmwareVersion\":\"0201000000042002\",\"ModelIdentifier\":\"iTRV\",\"HardwareVersion\":\"0\",\"SerialNumber\":\"90FD9FFFFEB304D9\",\"ProductModel\":\"iTRV\",\"OtaImageQueryCount\":0,\"LastOtaImageQueryCount\":1,\"ParentNodeId\":0,\"DeviceLockEnabled\":false,\"DisplayedSignalStrength\":\"Good\",\"BatteryVoltage\":27,\"BatteryLevel\":\"OneThird\",\"ReceptionOfController\":{\"Rssi\":-62,\"Lqi\":152},\"ReceptionOfDevice\":{\"Rssi\":-58,\"Lqi\":168},\"PendingZigbeeMessageMask\":0},{\"id\":52963,\"NodeId\":49304,\"ProductType\":\"iTRV\",\"ProductIdentifier\":\"iTRV\",\"ActiveFirmwareVersion\":\"0201000000042002\",\"ModelIdentifier\":\"iTRV\",\"HardwareVersion\":\"0\",\"SerialNumber\":\"90FD9FFFFEB304E3\",\"ProductModel\":\"iTRV\",\"OtaImageQueryCount\":0,\"LastOtaImageQueryCount\":1,\"ParentNodeId\":0,\"DeviceLockEnabled\":false,\"DisplayedSignalStrength\":\"Good\",\"BatteryVoltage\":27,\"BatteryLevel\":\"OneThird\",\"ReceptionOfController\":{\"Rssi\":-70,\"Lqi\":120},\"ReceptionOfDevice\":{\"Rssi\":-62,\"Lqi\":152},\"PendingZigbeeMessageMask\":0},{\"id\":24616,\"NodeId\":11467,\"ProductType\":\"iTRV\",\"ProductIdentifier\":\"iTRV\",\"ActiveFirmwareVersion\":\"0201000000042002\",\"ModelIdentifier\":\"iTRV\",\"HardwareVersion\":\"0\",\"SerialNumber\":\"90FD9FFFFEB30B53\",\"ProductModel\":\"iTRV\",\"OtaImageQueryCount\":0,\"LastOtaImageQueryCount\":1,\"ParentNodeId\":0,\"DeviceLockEnabled\":false,\"DisplayedSignalStrength\":\"Medium\",\"BatteryVoltage\":26,\"BatteryLevel\":\"Low\",\"ReceptionOfController\":{\"Rssi\":-78,\"Lqi\":88},\"ReceptionOfDevice\":{\"Rssi\":-71,\"Lqi\":116},\"PendingZigbeeMessageMask\":0},{\"id\":60161,\"NodeId\":14592,\"ProductType\":\"iTRV\",\"ProductIdentifier\":\"iTRV\",\"ActiveFirmwareVersion\":\"0201000000012017\",\"ModelIdentifier\":\"iTRV\",\"HardwareVersion\":\"0\",\"SerialNumber\":\"90FD9FFFFEAA66E0\",\"ProductModel\":\"iTRV\",\"OtaImageQueryCount\":0,\"LastOtaImageQueryCount\":1,\"ParentNodeId\":0,\"DeviceLockEnabled\":false,\"PendingZigbeeMessageMask\":2}],\"Zigbee\":{\"Error72Reset\":8,\"JPANCount\":7,\"NetworkChannel\":15,\"UpdateEBLState\":\"Successful\",\"CurrentEBLFile\":\"CICIE-1.0.1-c8271d47.ebl\",\"TargetEBLFile\":\"CICIE-1.0.1-c8271d47.ebl\",\"UpdateAttempts\":1,\"SuppressApsAcks\":true,\"ZigbeeModuleVersion\":\"1.0.1-c8271d47\",\"ZigbeeEUI\":\"000B57FFFEAD7E16\"},\"UpgradeInfo\":[{\"id\":1,\"FirmwareFilename\":\"0201000000042002FOTA.BIN\"},{\"id\":2,\"FirmwareFilename\":\"0401000000010005FOTA.BIN\"},{\"id\":3,\"FirmwareFilename\":\"0401010100010005FOTA.BIN\"},{\"id\":4,\"FirmwareFilename\":\"0441000000010005FOTA.BIN\"},{\"id\":5,\"FirmwareFilename\":\"0441010100010005FOTA.BIN\"},{\"id\":6,\"FirmwareFilename\":\"04E1000900042002FOTA.BIN\"},{\"id\":7,\"FirmwareFilename\":\"05E1000900000023FOTA.BIN\"},{\"id\":8,\"FirmwareFilename\":\"0A00000000032000FOTA.BIN\"}],\"SmartValve\":[{\"id\":671,\"MountingOrientation\":\"Vertical\",\"SetPoint\":100,\"MeasuredTemperature\":181,\"PercentageDemand\":0,\"WindowState\":\"Closed\"},{\"id\":38367,\"MountingOrientation\":\"Vertical\",\"SetPoint\":100,\"MeasuredTemperature\":178,\"PercentageDemand\":0,\"WindowState\":\"Closed\"},{\"id\":60160,\"MountingOrientation\":\"Vertical\",\"SetPoint\":-200,\"MeasuredTemperature\":197,\"PercentageDemand\":0,\"WindowState\":\"Closed\"},{\"id\":60159,\"MountingOrientation\":\"Vertical\",\"SetPoint\":100,\"MeasuredTemperature\":182,\"PercentageDemand\":0,\"WindowState\":\"Closed\"},{\"id\":52963,\"MountingOrientation\":\"Vertical\",\"SetPoint\":100,\"MeasuredTemperature\":169,\"PercentageDemand\":0,\"WindowState\":\"Closed\"},{\"id\":24616,\"MountingOrientation\":\"Vertical\",\"SetPoint\":-200,\"MeasuredTemperature\":197,\"PercentageDemand\":0,\"WindowState\":\"Closed\"},{\"id\":60161,\"MountingOrientation\":\"Vertical\",\"MeasuredTemperature\":-32768}],\"RoomStat\":[{\"id\":14761,\"SetPoint\":100,\"MeasuredTemperature\":185,\"MeasuredHumidity\":53}],\"DeviceCapabilityMatrix\":{\"Roomstat\":true,\"ITRV\":true,\"SmartPlug\":true,\"UFH\":false,\"UFHFloorTempSensor\":false,\"UFHDewSensor\":false,\"HACT\":false,\"LACT\":false},\"Schedule\":[{\"id\":2,\"Monday\":{\"SetPoints\":[{\"Time\":600,\"DegreesC\":140},{\"Time\":900,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":160},{\"Time\":1800,\"DegreesC\":170},{\"Time\":2000,\"DegreesC\":160},{\"Time\":2100,\"DegreesC\":100}]},\"Tuesday\":{\"SetPoints\":[{\"Time\":600,\"DegreesC\":140},{\"Time\":900,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":160},{\"Time\":1800,\"DegreesC\":170},{\"Time\":2000,\"DegreesC\":160},{\"Time\":2100,\"DegreesC\":100}]},\"Wednesday\":{\"SetPoints\":[{\"Time\":600,\"DegreesC\":140},{\"Time\":900,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":160},{\"Time\":1800,\"DegreesC\":170},{\"Time\":2000,\"DegreesC\":160},{\"Time\":2100,\"DegreesC\":100}]},\"Thursday\":{\"SetPoints\":[{\"Time\":600,\"DegreesC\":140},{\"Time\":900,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":160},{\"Time\":1800,\"DegreesC\":170},{\"Time\":2000,\"DegreesC\":160},{\"Time\":2100,\"DegreesC\":100}]},\"Friday\":{\"SetPoints\":[{\"Time\":600,\"DegreesC\":140},{\"Time\":900,\"DegreesC\":160},{\"Time\":1530,\"DegreesC\":170},{\"Time\":1800,\"DegreesC\":170},{\"Time\":2000,\"DegreesC\":160},{\"Time\":2100,\"DegreesC\":100}]},\"Saturday\":{\"SetPoints\":[{\"Time\":700,\"DegreesC\":140},{\"Time\":900,\"DegreesC\":160},{\"Time\":1530,\"DegreesC\":170},{\"Time\":1800,\"DegreesC\":170},{\"Time\":2000,\"DegreesC\":160},{\"Time\":2100,\"DegreesC\":100}]},\"Sunday\":{\"SetPoints\":[{\"Time\":700,\"DegreesC\":140},{\"Time\":900,\"DegreesC\":160},{\"Time\":1530,\"DegreesC\":170},{\"Time\":1800,\"DegreesC\":170},{\"Time\":2000,\"DegreesC\":160},{\"Time\":2100,\"DegreesC\":100}]},\"Type\":\"Heating\"},{\"id\":3,\"Monday\":{\"SetPoints\":[{\"Time\":800,\"DegreesC\":140},{\"Time\":930,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":160},{\"Time\":1730,\"DegreesC\":170},{\"Time\":1830,\"DegreesC\":180},{\"Time\":2100,\"DegreesC\":170},{\"Time\":2200,\"DegreesC\":100}]},\"Tuesday\":{\"SetPoints\":[{\"Time\":800,\"DegreesC\":140},{\"Time\":930,\"DegreesC\":180},{\"Time\":1530,\"DegreesC\":180},{\"Time\":1730,\"DegreesC\":170},{\"Time\":1830,\"DegreesC\":180},{\"Time\":2100,\"DegreesC\":170},{\"Time\":2200,\"DegreesC\":100}]},\"Wednesday\":{\"SetPoints\":[{\"Time\":800,\"DegreesC\":140},{\"Time\":930,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":160},{\"Time\":1730,\"DegreesC\":170},{\"Time\":1830,\"DegreesC\":180},{\"Time\":2100,\"DegreesC\":170},{\"Time\":2200,\"DegreesC\":100}]},\"Thursday\":{\"SetPoints\":[{\"Time\":800,\"DegreesC\":140},{\"Time\":930,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":160},{\"Time\":1730,\"DegreesC\":170},{\"Time\":1830,\"DegreesC\":180},{\"Time\":2100,\"DegreesC\":170},{\"Time\":2200,\"DegreesC\":100}]},\"Friday\":{\"SetPoints\":[{\"Time\":800,\"DegreesC\":140},{\"Time\":930,\"DegreesC\":140},{\"Time\":1530,\"DegreesC\":160},{\"Time\":1730,\"DegreesC\":170},{\"Time\":1830,\"DegreesC\":180},{\"Time\":2100,\"DegreesC\":170},{\"Time\":2200,\"DegreesC\":100}]},\"Saturday\":{\"SetPoints\":[{\"Time\":800,\"DegreesC\":140},{\"Time\":930,\"DegreesC\":140},{\"Time\":1530,\"DegreesC\":160},{\"Time\":1730,\"DegreesC\":170},{\"Time\":1830,\"DegreesC\":180},{\"Time\":2100,\"DegreesC\":170},{\"Time\":2200,\"DegreesC\":100}]},\"Sunday\":{\"SetPoints\":[{\"Time\":800,\"DegreesC\":140},{\"Time\":930,\"DegreesC\":140},{\"Time\":1530,\"DegreesC\":160},{\"Time\":1730,\"DegreesC\":170},{\"Time\":1830,\"DegreesC\":180},{\"Time\":2100,\"DegreesC\":170},{\"Time\":2200,\"DegreesC\":100}]},\"Type\":\"Heating\"},{\"id\":4,\"Monday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":160},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":180},{\"Time\":2230,\"DegreesC\":-200}]},\"Tuesday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":160},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":180},{\"Time\":2230,\"DegreesC\":-200}]},\"Wednesday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":160},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":180},{\"Time\":2230,\"DegreesC\":-200}]},\"Thursday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":160},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":180},{\"Time\":2230,\"DegreesC\":-200}]},\"Friday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":160},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":180},{\"Time\":2230,\"DegreesC\":-200}]},\"Saturday\":{\"SetPoints\":[{\"Time\":700,\"DegreesC\":160},{\"Time\":900,\"DegreesC\":170},{\"Time\":1600,\"DegreesC\":180},{\"Time\":2300,\"DegreesC\":-200}]},\"Sunday\":{\"SetPoints\":[{\"Time\":700,\"DegreesC\":160},{\"Time\":900,\"DegreesC\":170},{\"Time\":1600,\"DegreesC\":180},{\"Time\":2300,\"DegreesC\":-200}]},\"Type\":\"Heating\"},{\"id\":5,\"Monday\":{\"SetPoints\":[{\"Time\":600,\"DegreesC\":140},{\"Time\":830,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":170},{\"Time\":1700,\"DegreesC\":180},{\"Time\":2200,\"DegreesC\":100}]},\"Tuesday\":{\"SetPoints\":[{\"Time\":600,\"DegreesC\":140},{\"Time\":830,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":170},{\"Time\":1700,\"DegreesC\":180},{\"Time\":2200,\"DegreesC\":100}]},\"Wednesday\":{\"SetPoints\":[{\"Time\":600,\"DegreesC\":140},{\"Time\":830,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":170},{\"Time\":1700,\"DegreesC\":180},{\"Time\":2200,\"DegreesC\":100}]},\"Thursday\":{\"SetPoints\":[{\"Time\":600,\"DegreesC\":140},{\"Time\":830,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":170},{\"Time\":1700,\"DegreesC\":180},{\"Time\":2200,\"DegreesC\":100}]},\"Friday\":{\"SetPoints\":[{\"Time\":600,\"DegreesC\":140},{\"Time\":830,\"DegreesC\":170},{\"Time\":1530,\"DegreesC\":180},{\"Time\":1700,\"DegreesC\":180},{\"Time\":2200,\"DegreesC\":100}]},\"Saturday\":{\"SetPoints\":[{\"Time\":600,\"DegreesC\":140},{\"Time\":830,\"DegreesC\":170},{\"Time\":1530,\"DegreesC\":180},{\"Time\":1700,\"DegreesC\":180},{\"Time\":2200,\"DegreesC\":100}]},\"Sunday\":{\"SetPoints\":[{\"Time\":600,\"DegreesC\":140},{\"Time\":830,\"DegreesC\":170},{\"Time\":1530,\"DegreesC\":180},{\"Time\":1700,\"DegreesC\":180},{\"Time\":2200,\"DegreesC\":100}]},\"Type\":\"Heating\"},{\"id\":6,\"Monday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":140},{\"Time\":830,\"DegreesC\":100},{\"Time\":1730,\"DegreesC\":170},{\"Time\":2030,\"DegreesC\":180},{\"Time\":2200,\"DegreesC\":100}]},\"Tuesday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":140},{\"Time\":830,\"DegreesC\":100},{\"Time\":1730,\"DegreesC\":170},{\"Time\":2030,\"DegreesC\":180},{\"Time\":2200,\"DegreesC\":100}]},\"Wednesday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":140},{\"Time\":830,\"DegreesC\":100},{\"Time\":1730,\"DegreesC\":170},{\"Time\":2030,\"DegreesC\":180},{\"Time\":2200,\"DegreesC\":100}]},\"Thursday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":140},{\"Time\":830,\"DegreesC\":100},{\"Time\":1730,\"DegreesC\":170},{\"Time\":2030,\"DegreesC\":180},{\"Time\":2200,\"DegreesC\":100}]},\"Friday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":140},{\"Time\":830,\"DegreesC\":100},{\"Time\":1730,\"DegreesC\":140},{\"Time\":2030,\"DegreesC\":140},{\"Time\":2200,\"DegreesC\":100}]},\"Saturday\":{\"SetPoints\":[{\"Time\":800,\"DegreesC\":140},{\"Time\":900,\"DegreesC\":140},{\"Time\":2030,\"DegreesC\":140},{\"Time\":2200,\"DegreesC\":100}]},\"Sunday\":{\"SetPoints\":[{\"Time\":800,\"DegreesC\":140},{\"Time\":900,\"DegreesC\":140},{\"Time\":2030,\"DegreesC\":140},{\"Time\":2200,\"DegreesC\":100}]},\"Type\":\"Heating\"},{\"id\":7,\"Monday\":{\"SetPoints\":[{\"Time\":0,\"DegreesC\":-200},{\"Time\":630,\"DegreesC\":-200},{\"Time\":830,\"DegreesC\":-200},{\"Time\":1500,\"DegreesC\":-200},{\"Time\":1700,\"DegreesC\":-200},{\"Time\":2330,\"DegreesC\":-200}]},\"Tuesday\":{\"SetPoints\":[{\"Time\":0,\"DegreesC\":-200},{\"Time\":630,\"DegreesC\":-200},{\"Time\":830,\"DegreesC\":-200},{\"Time\":1500,\"DegreesC\":-200},{\"Time\":1700,\"DegreesC\":-200},{\"Time\":2330,\"DegreesC\":-200}]},\"Wednesday\":{\"SetPoints\":[{\"Time\":0,\"DegreesC\":-200},{\"Time\":630,\"DegreesC\":-200},{\"Time\":830,\"DegreesC\":-200},{\"Time\":1500,\"DegreesC\":-200},{\"Time\":1700,\"DegreesC\":-200},{\"Time\":2330,\"DegreesC\":-200}]},\"Thursday\":{\"SetPoints\":[{\"Time\":0,\"DegreesC\":-200},{\"Time\":630,\"DegreesC\":-200},{\"Time\":830,\"DegreesC\":-200},{\"Time\":1500,\"DegreesC\":-200},{\"Time\":1700,\"DegreesC\":-200},{\"Time\":2330,\"DegreesC\":-200}]},\"Friday\":{\"SetPoints\":[{\"Time\":0,\"DegreesC\":-200},{\"Time\":630,\"DegreesC\":-200},{\"Time\":830,\"DegreesC\":-200},{\"Time\":1500,\"DegreesC\":-200},{\"Time\":1700,\"DegreesC\":-200},{\"Time\":2330,\"DegreesC\":-200}]},\"Saturday\":{\"SetPoints\":[{\"Time\":0,\"DegreesC\":-200},{\"Time\":630,\"DegreesC\":-200},{\"Time\":830,\"DegreesC\":-200},{\"Time\":1500,\"DegreesC\":-200},{\"Time\":1700,\"DegreesC\":-200},{\"Time\":2330,\"DegreesC\":-200}]},\"Sunday\":{\"SetPoints\":[{\"Time\":0,\"DegreesC\":-200},{\"Time\":630,\"DegreesC\":-200},{\"Time\":830,\"DegreesC\":-200},{\"Time\":1500,\"DegreesC\":-200},{\"Time\":1700,\"DegreesC\":-200},{\"Time\":2330,\"DegreesC\":-200}]},\"Type\":\"Heating\"},{\"id\":8,\"Monday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":-200},{\"Time\":800,\"DegreesC\":-200},{\"Time\":1530,\"DegreesC\":-200},{\"Time\":2130,\"DegreesC\":-200},{\"Time\":2200,\"DegreesC\":-200}]},\"Tuesday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":-200},{\"Time\":800,\"DegreesC\":-200},{\"Time\":1530,\"DegreesC\":-200},{\"Time\":2130,\"DegreesC\":-200},{\"Time\":2200,\"DegreesC\":-200}]},\"Wednesday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":-200},{\"Time\":800,\"DegreesC\":-200},{\"Time\":1530,\"DegreesC\":-200},{\"Time\":2130,\"DegreesC\":-200},{\"Time\":2200,\"DegreesC\":-200}]},\"Thursday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":-200},{\"Time\":800,\"DegreesC\":-200},{\"Time\":1530,\"DegreesC\":-200},{\"Time\":2130,\"DegreesC\":-200},{\"Time\":2200,\"DegreesC\":-200}]},\"Friday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":-200},{\"Time\":800,\"DegreesC\":-200},{\"Time\":1530,\"DegreesC\":-200},{\"Time\":2130,\"DegreesC\":-200},{\"Time\":2200,\"DegreesC\":-200}]},\"Saturday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":-200},{\"Time\":800,\"DegreesC\":-200},{\"Time\":1530,\"DegreesC\":-200},{\"Time\":2130,\"DegreesC\":-200},{\"Time\":2200,\"DegreesC\":-200}]},\"Sunday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":-200},{\"Time\":800,\"DegreesC\":-200},{\"Time\":1530,\"DegreesC\":-200},{\"Time\":2130,\"DegreesC\":-200},{\"Time\":2200,\"DegreesC\":-200}]},\"Type\":\"Heating\"},{\"id\":9,\"Monday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":150},{\"Time\":830,\"DegreesC\":150},{\"Time\":1630,\"DegreesC\":160},{\"Time\":2230,\"DegreesC\":-200}]},\"Tuesday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":150},{\"Time\":830,\"DegreesC\":150},{\"Time\":1630,\"DegreesC\":160},{\"Time\":2230,\"DegreesC\":-200}]},\"Wednesday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":150},{\"Time\":830,\"DegreesC\":150},{\"Time\":1630,\"DegreesC\":160},{\"Time\":2230,\"DegreesC\":-200}]},\"Thursday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":150},{\"Time\":830,\"DegreesC\":150},{\"Time\":1630,\"DegreesC\":160},{\"Time\":2230,\"DegreesC\":-200}]},\"Friday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":150},{\"Time\":830,\"DegreesC\":150},{\"Time\":1630,\"DegreesC\":160},{\"Time\":2230,\"DegreesC\":-200}]},\"Saturday\":{\"SetPoints\":[{\"Time\":700,\"DegreesC\":-200},{\"Time\":900,\"DegreesC\":-200},{\"Time\":1600,\"DegreesC\":180},{\"Time\":2300,\"DegreesC\":-200}]},\"Sunday\":{\"SetPoints\":[{\"Time\":700,\"DegreesC\":-200},{\"Time\":900,\"DegreesC\":-200},{\"Time\":1600,\"DegreesC\":180},{\"Time\":2300,\"DegreesC\":-200}]},\"Type\":\"Heating\"},{\"id\":10,\"Monday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":200},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":210},{\"Time\":2230,\"DegreesC\":-200}]},\"Tuesday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":200},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":210},{\"Time\":2230,\"DegreesC\":-200}]},\"Wednesday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":200},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":210},{\"Time\":2230,\"DegreesC\":-200}]},\"Thursday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":200},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":210},{\"Time\":2230,\"DegreesC\":-200}]},\"Friday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":200},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":210},{\"Time\":2230,\"DegreesC\":-200}]},\"Saturday\":{\"SetPoints\":[{\"Time\":700,\"DegreesC\":200},{\"Time\":900,\"DegreesC\":180},{\"Time\":1600,\"DegreesC\":210},{\"Time\":2300,\"DegreesC\":-200}]},\"Sunday\":{\"SetPoints\":[{\"Time\":700,\"DegreesC\":200},{\"Time\":900,\"DegreesC\":180},{\"Time\":1600,\"DegreesC\":210},{\"Time\":2300,\"DegreesC\":-200}]},\"Type\":\"Heating\"},{\"id\":1,\"Monday\":{\"SetPoints\":[{\"Time\":800,\"DegreesC\":100},{\"Time\":930,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":160},{\"Time\":1700,\"DegreesC\":180},{\"Time\":1830,\"DegreesC\":190},{\"Time\":2100,\"DegreesC\":100}]},\"Tuesday\":{\"SetPoints\":[{\"Time\":800,\"DegreesC\":100},{\"Time\":930,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":160},{\"Time\":1700,\"DegreesC\":180},{\"Time\":1830,\"DegreesC\":190},{\"Time\":2100,\"DegreesC\":100}]},\"Wednesday\":{\"SetPoints\":[{\"Time\":800,\"DegreesC\":100},{\"Time\":930,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":160},{\"Time\":1700,\"DegreesC\":180},{\"Time\":1830,\"DegreesC\":190},{\"Time\":2100,\"DegreesC\":100}]},\"Thursday\":{\"SetPoints\":[{\"Time\":800,\"DegreesC\":100},{\"Time\":930,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":160},{\"Time\":1700,\"DegreesC\":180},{\"Time\":1830,\"DegreesC\":190},{\"Time\":2100,\"DegreesC\":100}]},\"Friday\":{\"SetPoints\":[{\"Time\":800,\"DegreesC\":100},{\"Time\":930,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":160},{\"Time\":1700,\"DegreesC\":180},{\"Time\":1830,\"DegreesC\":190},{\"Time\":2100,\"DegreesC\":100}]},\"Saturday\":{\"SetPoints\":[{\"Time\":800,\"DegreesC\":100},{\"Time\":930,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":160},{\"Time\":1700,\"DegreesC\":180},{\"Time\":1830,\"DegreesC\":190},{\"Time\":2100,\"DegreesC\":100}]},\"Sunday\":{\"SetPoints\":[{\"Time\":800,\"DegreesC\":100},{\"Time\":930,\"DegreesC\":100},{\"Time\":1530,\"DegreesC\":160},{\"Time\":1700,\"DegreesC\":180},{\"Time\":1830,\"DegreesC\":190},{\"Time\":2100,\"DegreesC\":100}]},\"Type\":\"Heating\"},{\"id\":13,\"Monday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":200},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":210},{\"Time\":2230,\"DegreesC\":-200}]},\"Tuesday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":200},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":210},{\"Time\":2230,\"DegreesC\":-200}]},\"Wednesday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":200},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":210},{\"Time\":2230,\"DegreesC\":-200}]},\"Thursday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":200},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":210},{\"Time\":2230,\"DegreesC\":-200}]},\"Friday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":200},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":210},{\"Time\":2230,\"DegreesC\":-200}]},\"Saturday\":{\"SetPoints\":[{\"Time\":700,\"DegreesC\":200},{\"Time\":900,\"DegreesC\":180},{\"Time\":1600,\"DegreesC\":210},{\"Time\":2300,\"DegreesC\":-200}]},\"Sunday\":{\"SetPoints\":[{\"Time\":700,\"DegreesC\":200},{\"Time\":900,\"DegreesC\":180},{\"Time\":1600,\"DegreesC\":210},{\"Time\":2300,\"DegreesC\":-200}]},\"Type\":\"Heating\"},{\"id\":11,\"Monday\":{\"SetPoints\":[{\"Time\":540,\"DegreesC\":140},{\"Time\":800,\"DegreesC\":140},{\"Time\":1800,\"DegreesC\":190},{\"Time\":2130,\"DegreesC\":100}]},\"Tuesday\":{\"SetPoints\":[{\"Time\":540,\"DegreesC\":140},{\"Time\":800,\"DegreesC\":140},{\"Time\":1800,\"DegreesC\":190},{\"Time\":2130,\"DegreesC\":100}]},\"Wednesday\":{\"SetPoints\":[{\"Time\":540,\"DegreesC\":140},{\"Time\":800,\"DegreesC\":140},{\"Time\":1800,\"DegreesC\":190},{\"Time\":2130,\"DegreesC\":100}]},\"Thursday\":{\"SetPoints\":[{\"Time\":540,\"DegreesC\":140},{\"Time\":800,\"DegreesC\":140},{\"Time\":1800,\"DegreesC\":190},{\"Time\":2130,\"DegreesC\":100}]},\"Friday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":140},{\"Time\":800,\"DegreesC\":150},{\"Time\":1800,\"DegreesC\":190},{\"Time\":2130,\"DegreesC\":100}]},\"Saturday\":{\"SetPoints\":[{\"Time\":830,\"DegreesC\":140},{\"Time\":1030,\"DegreesC\":160},{\"Time\":1800,\"DegreesC\":190},{\"Time\":2130,\"DegreesC\":100}]},\"Sunday\":{\"SetPoints\":[{\"Time\":830,\"DegreesC\":140},{\"Time\":1030,\"DegreesC\":160},{\"Time\":1800,\"DegreesC\":190},{\"Time\":2130,\"DegreesC\":100}]},\"Type\":\"Heating\"},{\"id\":12,\"Monday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":200},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":210},{\"Time\":2230,\"DegreesC\":-200}]},\"Tuesday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":200},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":210},{\"Time\":2230,\"DegreesC\":-200}]},\"Wednesday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":200},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":210},{\"Time\":2230,\"DegreesC\":-200}]},\"Thursday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":200},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":210},{\"Time\":2230,\"DegreesC\":-200}]},\"Friday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":200},{\"Time\":830,\"DegreesC\":160},{\"Time\":1630,\"DegreesC\":210},{\"Time\":2230,\"DegreesC\":-200}]},\"Saturday\":{\"SetPoints\":[{\"Time\":700,\"DegreesC\":200},{\"Time\":900,\"DegreesC\":180},{\"Time\":1600,\"DegreesC\":210},{\"Time\":2300,\"DegreesC\":-200}]},\"Sunday\":{\"SetPoints\":[{\"Time\":700,\"DegreesC\":200},{\"Time\":900,\"DegreesC\":180},{\"Time\":1600,\"DegreesC\":210},{\"Time\":2300,\"DegreesC\":-200}]},\"Type\":\"Heating\"},{\"id\":14,\"Monday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":190},{\"Time\":830,\"DegreesC\":150},{\"Time\":1630,\"DegreesC\":200},{\"Time\":2230,\"DegreesC\":150}]},\"Tuesday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":190},{\"Time\":830,\"DegreesC\":150},{\"Time\":1630,\"DegreesC\":200},{\"Time\":2230,\"DegreesC\":150}]},\"Wednesday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":190},{\"Time\":830,\"DegreesC\":150},{\"Time\":1630,\"DegreesC\":200},{\"Time\":2230,\"DegreesC\":150}]},\"Thursday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":190},{\"Time\":830,\"DegreesC\":150},{\"Time\":1630,\"DegreesC\":200},{\"Time\":2230,\"DegreesC\":150}]},\"Friday\":{\"SetPoints\":[{\"Time\":630,\"DegreesC\":190},{\"Time\":830,\"DegreesC\":150},{\"Time\":1630,\"DegreesC\":200},{\"Time\":2230,\"DegreesC\":150}]},\"Saturday\":{\"SetPoints\":[{\"Time\":700,\"DegreesC\":190},{\"Time\":1000,\"DegreesC\":170},{\"Time\":1600,\"DegreesC\":200},{\"Time\":2300,\"DegreesC\":150}]},\"Sunday\":{\"SetPoints\":[{\"Time\":700,\"DegreesC\":190},{\"Time\":1000,\"DegreesC\":170},{\"Time\":1600,\"DegreesC\":200},{\"Time\":2300,\"DegreesC\":150}]},\"Type\":\"Heating\"}]}",
+        "payloadType": "json",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 150,
+        "y": 1640,
+        "wires": [
+            [
+                "280fde14.444002"
+            ]
+        ]
+    },
+    {
+        "id": "280fde14.444002",
+        "type": "gun-put-set",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "heating",
+        "path": "update",
+        "set": false,
+        "x": 360,
+        "y": 1640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dd5f217a.5ed15",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 115,
+        "y": 1680,
+        "wires": [
+            [
+                "4c4051be.b13b7"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "4c4051be.b13b7",
+        "type": "gun-get-once",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "heating",
+        "path": "update",
+        "singleOut": true,
+        "rawOut": true,
+        "allOut": true,
+        "x": 450,
+        "y": 1680,
+        "wires": [
+            [
+                "22838168.16eeee"
+            ]
+        ]
+    },
+    {
+        "id": "22838168.16eeee",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 730,
+        "y": 1680,
+        "wires": []
+    },
+    {
+        "id": "b348821f.2f16d",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 115,
+        "y": 1720,
+        "wires": [
+            [
+                "5efb2fa.ff459d"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "5efb2fa.ff459d",
+        "type": "gun-get-once",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "heating",
+        "path": "update/System",
+        "singleOut": false,
+        "rawOut": false,
+        "x": 410,
+        "y": 1720,
+        "wires": [
+            [
+                "64d4562.ce105a8"
+            ]
+        ]
+    },
+    {
+        "id": "64d4562.ce105a8",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 730,
+        "y": 1720,
+        "wires": []
+    },
+    {
+        "id": "1c6a5220.71abce",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "---- Deep object examples ---",
+        "info": "",
+        "x": 200,
+        "y": 1600,
+        "wires": []
+    },
+    {
+        "id": "f8ae2c04.740f9",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "TODO",
+        "info": "## get-once\n\n* allow path to be set from input msg.topic\n* \n\n## get\n\n* match get-once\n* \n\n## put\n\n* allow path to be set from input msg.topic",
+        "x": 890,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "fed509f1.1dcaf8",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 115,
+        "y": 1800,
+        "wires": [
+            [
+                "334f58bb.68ee38"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "e22712a6.9b19d",
+        "type": "gun-put-set",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "heating",
+        "path": "",
+        "set": false,
+        "x": 380,
+        "y": 1800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "334f58bb.68ee38",
+        "type": "function",
+        "z": "8c238839.7283e8",
+        "name": "null",
+        "func": "msg.payload = null\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 210,
+        "y": 1800,
+        "wires": [
+            [
+                "e22712a6.9b19d"
+            ]
+        ]
+    },
+    {
+        "id": "a79c46f1.307e48",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 115,
+        "y": 1840,
+        "wires": [
+            [
+                "67734a08.6fa814"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "67734a08.6fa814",
+        "type": "gun-get-once",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "heating",
+        "path": "",
+        "singleOut": false,
+        "rawOut": false,
+        "allOut": true,
+        "x": 280,
+        "y": 1840,
+        "wires": [
+            [
+                "7e66237d.94399c"
+            ]
+        ]
+    },
+    {
+        "id": "7e66237d.94399c",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 575,
+        "y": 1840,
+        "wires": [],
+        "l": false
+    },
+    {
+        "id": "73fac872.6246b8",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 575,
+        "y": 1880,
+        "wires": [],
+        "l": false
+    },
+    {
+        "id": "664cb0e7.833bf",
+        "type": "gun-get-once",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "heating",
+        "path": "update",
+        "singleOut": false,
+        "rawOut": false,
+        "allOut": true,
+        "x": 300,
+        "y": 1880,
+        "wires": [
+            [
+                "73fac872.6246b8"
+            ]
+        ]
+    },
+    {
+        "id": "ca88d5be.b2c6f8",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 115,
+        "y": 1880,
+        "wires": [
+            [
+                "664cb0e7.833bf"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "dd91294a.e7ca18",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "<= \"delete\" top hierarchy",
+        "info": "No, it really doesn't delete anything except the link to the rest of the hierarchy.\n\nThis is by design in Gun.js",
+        "x": 770,
+        "y": 1800,
+        "wires": []
+    },
+    {
+        "id": "f99b10b8.557a9",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "<= Returns \"null\" as expected",
+        "info": "No, it really doesn't delete anything except the link to the rest of the hierarchy.\n\nThis is by design in Gun.js",
+        "x": 780,
+        "y": 1840,
+        "wires": []
+    },
+    {
+        "id": "c3d450a1.1591f",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "<= Returns the original data!! Not an error",
+        "info": "No, it really doesn't delete anything except the link to the rest of the hierarchy.\n\nThis is by design in Gun.js",
+        "x": 820,
+        "y": 1880,
+        "wires": []
+    },
+    {
+        "id": "54b80947.bf99b8",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 115,
+        "y": 1940,
+        "wires": [
+            [
+                "64c3e99d.0cc018"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "fe43779e.1a8228",
+        "type": "gun-put-set",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "heating",
+        "path": "update",
+        "set": false,
+        "x": 400,
+        "y": 1940,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "64c3e99d.0cc018",
+        "type": "function",
+        "z": "8c238839.7283e8",
+        "name": "null",
+        "func": "msg.payload = null\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 210,
+        "y": 1940,
+        "wires": [
+            [
+                "fe43779e.1a8228"
+            ]
+        ]
+    },
+    {
+        "id": "a1675878.2daef8",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 115,
+        "y": 1980,
+        "wires": [
+            [
+                "6e057557.d5470c"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "6e057557.d5470c",
+        "type": "gun-get-once",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "heating",
+        "path": "update",
+        "singleOut": false,
+        "rawOut": false,
+        "allOut": true,
+        "x": 300,
+        "y": 1980,
+        "wires": [
+            [
+                "2f136bc1.b32f24"
+            ]
+        ]
+    },
+    {
+        "id": "2f136bc1.b32f24",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 575,
+        "y": 1980,
+        "wires": [],
+        "l": false
+    },
+    {
+        "id": "9ffd51be.36e2",
+        "type": "debug",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 575,
+        "y": 2020,
+        "wires": [],
+        "l": false
+    },
+    {
+        "id": "72a68d85.1f38c4",
+        "type": "gun-get-once",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "gunconfig": "dbbc7abe.617de8",
+        "db": "heating",
+        "path": "update/System",
+        "singleOut": false,
+        "rawOut": false,
+        "allOut": true,
+        "x": 330,
+        "y": 2020,
+        "wires": [
+            [
+                "9ffd51be.36e2"
+            ]
+        ]
+    },
+    {
+        "id": "77901936.1fd758",
+        "type": "inject",
+        "z": "8c238839.7283e8",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 115,
+        "y": 2020,
+        "wires": [
+            [
+                "72a68d85.1f38c4"
+            ]
+        ],
+        "l": false
+    },
+    {
+        "id": "d5be275a.f01e28",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "<= \"delete\" top hierarchy",
+        "info": "No, it really doesn't delete anything except the link to the rest of the hierarchy.\n\nThis is by design in Gun.js",
+        "x": 770,
+        "y": 1940,
+        "wires": []
+    },
+    {
+        "id": "c9cabaa0.bda768",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "<= Returns \"null\" as expected",
+        "info": "No, it really doesn't delete anything except the link to the rest of the hierarchy.\n\nThis is by design in Gun.js",
+        "x": 780,
+        "y": 1980,
+        "wires": []
+    },
+    {
+        "id": "9e03af05.50763",
+        "type": "comment",
+        "z": "8c238839.7283e8",
+        "name": "<= Returns the original data!! Not an error",
+        "info": "No, it really doesn't delete anything except the link to the rest of the hierarchy.\n\nThis is by design in Gun.js",
+        "x": 820,
+        "y": 2020,
         "wires": []
     },
     {

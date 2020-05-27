@@ -43,7 +43,7 @@
             label: function() {
                 return this.name ? this.name : `${this.set===true?'SET':'PUT'}(${this.db}/${this.path})`
             },
-            paletteLabel: 'Gun: put/set',
+            paletteLabel: 'Gun: Update',
             icon: 'font-awesome/fa-arrow-circle-up',
             inputs:1,
             outputs:1,
@@ -93,5 +93,8 @@
 <script type="text/html" data-help-name="gun-put-set">
     <p>
         Send msg payload to a Gun.js "Soul" using either PUT or SET.
+    </p>
+    <p>
+        Other help to be completed.
     </p>
 </script>

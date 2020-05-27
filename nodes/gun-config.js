@@ -21,10 +21,20 @@ const nodeNameConfig = 'gun-config'
 
 const Gun = require('gun')
 //require('gun/lib/unset.js')
+const gunOptions = {
+    //peers: {},
+    //radisk: true,
+    //localStorage: true,
+    //uuid: function(){},
+    //file: `${RED.settings.userDir}/_gun/`
+}
 
 // THIS FUNCTION IS EXECUTED ONLY ONCE AS NODE-RED IS LOADING
 module.exports = function(RED) {
     'use strict'
+
+    // Force the local gun db into the userDir
+    gunOptions.file = `${RED.settings.userDir}/_gun/`
 
     /** RED, parent object set by Node-RED
      * @external RED
@@ -47,10 +57,30 @@ module.exports = function(RED) {
         /** Create local copies of the node configuration (as defined in the .html file)
          *  NB: Best to use defaults here as well as in the html file for safety
          **/
-        node.server = config.server || undefined
+        node.server = config.server || ''
 
-        if (node.server) node.Gun = Gun(node.server)
-        else node.Gun = Gun()
+        if (node.server !== '') {
+            gunOptions.peers = {}
+            node.server.split(',').forEach(server => {
+                gunOptions.peers[server] = {}
+            })
+        }
+
+        // Keep the reference to Gun
+        node.Gun = Gun(gunOptions)
+        // just for reference
+        node.gunOptions = gunOptions
+        // debugging
+        // var heating = node.Gun.get('heating')
+        // var update = heating.get('update')
+    
+        // heating.once(function(data, key) {
+        //     console.log('HEATING', key, data)
+        // })
+        node.debug = node.Gun.get('heating/update/System')
+        // node.Gun.get('heating/update/System').once(function(data, key) {
+        //     console.log('HEATING/UPDATE/SYSTEM', key, data)
+        // })
 
     } // ---- End of nodeDefnConfig (initialised node instance) ---- //
 

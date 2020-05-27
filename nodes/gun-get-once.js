@@ -20,6 +20,7 @@
 const nodeName = 'gun-get-once'
 
 //const Gun = require('gun') // Not required, we use a single reference in the configuration node
+require('gun/lib/load.js')
 
 // THIS FUNCTION IS EXECUTED ONLY ONCE AS NODE-RED IS LOADING
 module.exports = function(RED) {
@@ -58,6 +59,8 @@ module.exports = function(RED) {
         node.singleOut  = config.singleOut // default = false
         // Show raw Gun return data in payload or remove the _ object (default?
         node.rawOut = config.rawOut // default = false
+        // Return full hierarchy or not (default)?
+        node.allOut = config.allOut // default = false
 
         // Add full soul reference
         node.soul = node.path !== '' ? `${node.db}/${node.path}` : node.db
@@ -75,26 +78,42 @@ module.exports = function(RED) {
             
             // If msg is null, nothing will be sent
             if ( msg !== null ) {
-                if (node.Gun) {
-                    let db = node.Gun.get(node.db)
-                    let data = node.path === '' ? db : db.get(node.path)
 
-                    if ( node.singleOut === true ) {
-                        // Create a one time output & listen for future additions only - re-running will replace the previous listener
-                        data.once(function(value, key){
+                if (node.Gun) {
+
+                    if ( node.allOut === true ) {
+                        
+                        // Output the full hierarchy
+                        node.Gun.get(node.soul).load(function(value){
+                            // Makes sense here to carry fwd any non-standard msg props as we are only outputting a single msg
                             msg.topic = node.soul
-                            console.log(node.rawOut, value, removeGunUnderscore(value))
+                            msg.payload = value
+                            send(msg)
+                        })
+
+                    } else if ( node.singleOut === true ) {
+
+                        // Create a one time output & listen for future additions only - re-running will replace the previous listener
+                        node.Gun.get(node.soul).once(function(value, key){
+                            // Makes sense here to carry fwd any non-standard msg props as we are only outputting a single msg
+                            msg.topic = node.soul
                             msg.payload = node.rawOut !== true ? removeGunUnderscore(value) : value
                             send(msg)
                         })
+
                     } else {
+
                         // Create a one time output & listen for future additions only - re-running will replace the previous listener
-                        data.map().once(function(value, key){
-                            msg.topic = node.soul
-                            msg.payload = node.rawOut !== true ? removeGunUnderscore(value) : value
-                            send(msg)
+                        node.Gun.get(node.soul).map().once(function(value, key){
+                            // Does not make sense to carry fwd non-std msg props when sending multiple msgs
+                            send({
+                                'topic': `${node.soul}/${key}`,
+                                'payload': node.rawOut !== true ? removeGunUnderscore(value) : value
+                            })
                         })
+
                     }
+
                 } else {
                     console.log('GUN-GET-ONCE No Gun Factory', node.Gun)
                 }

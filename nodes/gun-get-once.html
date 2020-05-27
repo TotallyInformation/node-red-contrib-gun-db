@@ -32,16 +32,18 @@
                 db:        { value: '',    required: true,  },
                 // slash path added to db to specify the "soul" to target
                 path:      { value: '',    required: false, },
-                // Single output msg or multiple?
+                // Single output msg or multiple (default)?
                 singleOut: { value: false, required: false, },
                 // Show raw Gun return data in payload or remove the _ object (default)?
                 rawOut:    { value: false, required: false, },
+                // Return full hierarchy or not (default)?
+                allOut:    { value: false, required: false, },
             },
 
             label: function() {
-                return this.name ? this.name : `GET-ONCE(${this.db}/${this.path})`
+                return this.name ? this.name : `GET-ONCE(${this.db}/${this.path})${this.singleOut===true?'-SINGLE':''}${this.allOut===true?'-FULL':''}${this.rawOut===true?'-RAW':''}`
             },
-            paletteLabel: 'Gun: get once',
+            paletteLabel: 'Gun: Out',
             icon: 'font-awesome/fa-arrow-circle-o-right',
             inputs:  1,
             outputs: 1,
@@ -80,11 +82,12 @@
     </div>
 
     <div class="form-tips">
-        Note that the input is purely a trigger. Nothing from the input is sent to the output.
-        Also note that this node will also fire if a new element is added to the db.
+        Note that the input is only really a trigger. <br>
+        With default settings nothing from the input reaches the output.<br>
+        If outputting a single msg, topic and payload are replaced but anything else is copied over.
     </div>
 
-    <div class="form-row">
+    <div class="form-row" style="margin-top:1em;">
         <input type="checkbox" id="node-input-singleOut" style="display:inline-block;width:auto;vertical-align:top;margin-top:5px;">
         <label for="node-input-singleOut" style="width: 90%;">&nbsp;Output a single msg rather than one for each document?</label>
     </div>
@@ -93,13 +96,22 @@
         If selected, a single output msg is produced containing all documents for the soul.
     </div>
 
-    <div class="form-row">
+    <div class="form-row" style="margin-top:1em;">
         <input type="checkbox" id="node-input-rawOut" style="display:inline-block;width:auto;vertical-align:top;margin-top:5px;">
         <label for="node-input-rawOut" style="width: 90%;">&nbsp;Output the <code>_</code> Gun object as well as the actual data?</label>
     </div>
 
     <div class="form-tips">
         If selected, the output payload will include the <code>_</code> object that includes the key (<code>#</code>) and the update timestamps (<code>></code>).
+    </div>
+
+    <div class="form-row" style="margin-top:1em;">
+        <input type="checkbox" id="node-input-allOut" style="display:inline-block;width:auto;vertical-align:top;">
+        <label for="node-input-allOut" style="width: 90%;">&nbsp;Output the whole hierarchy rather than just 1 level?</label>
+    </div>
+
+    <div class="form-tips">
+        If selected, the output payload will include the full hierarchy of the node rather than just 1 level.
     </div>
 
 </script>
@@ -109,5 +121,8 @@
         Get the contents of a Gun.js soul once.
         Other outputs will happen if new sub-elements are added.
         Note that only 1 level of the graph is retrieved. Subsequent levels only return a soul name. See the Gun.js docs for reasons.
+    </p>
+    <p>
+        Other help to be completed.
     </p>
 </script>
