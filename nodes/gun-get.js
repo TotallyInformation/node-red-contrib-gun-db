@@ -76,13 +76,20 @@ module.exports = function(RED) {
 
             if ( node.singleOut === true ) {
                 node.data.on(function(value, key){
-                    if (value && !node.rawOut) delete value._;
-                    //console.log(node.rawOut, value, value);
-                    node.send({topic:node.soul, payload: value});
+                    var payload;
+                    if (value !== null && typeof value === 'object'){
+                      // remove deleted values from payload
+                      payload = {};
+                      Object.keys(value).forEach((k) => value[k] ? payload[k] = value[k]: "");
+                      if (!node.rawOut) delete payload["_"];
+                    }
+                    else{
+                      payload = value;
+                    } 
+                    node.send({topic:node.soul, payload: payload});
                 })
             } else {
                 node.data.map().on(function(value, key){
-                    if (!node.rawOut) delete value._;
                     node.send({topic: node.soul+"/"+key, payload: value});
                 })
             }
