@@ -66,28 +66,34 @@ module.exports = function(RED) {
         node.Gun = RED.nodes.getNode(node.gunconfig).Gun
 
         if (node.Gun) {
-            let db = node.Gun.get(node.db)
-            let data = node.path === '' ? db : db.get(node.path)
+            node.data = node.Gun.get(node.db);
 
-            let msg = {}
+            function contextChain(key, index, contextArray){
+              if (key) node.data = node.data.get(key);
+            }
+            var contextLst = node.path.split("/");
+            contextLst.forEach(contextChain);
 
             if ( node.singleOut === true ) {
-                data.on(function(value, key){
-                    msg.topic = node.soul
-                    console.log(node.rawOut, value, removeGunUnderscore(value))
-                    msg.payload = node.rawOut !== true ? removeGunUnderscore(value) : value
-                    node.send(msg)
+                node.data.on(function(value, key){
+                    if (value && !node.rawOut) delete value._;
+                    //console.log(node.rawOut, value, value);
+                    node.send({topic:node.soul, payload: value});
                 })
             } else {
-                data.map().on(function(value, key){
-                    msg.topic = node.soul
-                    msg.payload = node.rawOut !== true ? removeGunUnderscore(value) : value
-                    node.send(msg)
+                node.data.map().on(function(value, key){
+                    if (!node.rawOut) delete value._;
+                    node.send({topic: node.soul+"/"+key, payload: value});
                 })
             }
         } else {
             console.log('GUN-GET No Gun Factory', node.Gun)
         }
+
+        this.on('close', function(removed, done){
+          node.data.off();
+          done();
+         });
 
     } // ---- End of nodeDefn (initialised node instance) ---- //
 
@@ -98,25 +104,5 @@ module.exports = function(RED) {
 
 
 } // ---- End of module.exports ---- //
-
-/** Remove Gun.js `_` object from returned data
- * @param {*} data Data returned from a Gun.js ON or ONCE function
- * @returns {*} Data with _ property removed
- */
-function removeGunUnderscore(data) {
-    let payload = {}
-    // If input is an object, remove a top-level property called "_"
-    if (Object.prototype.toString.call(data) === '[object Object]') {
-        Object.entries(data).forEach( ([key, value]) => {
-            if (key !== '_') {
-                payload[key] = value
-            }
-        })
-    } else {
-        payload = data
-    }
-
-    return payload
-}
 
 // EOF
