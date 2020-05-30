@@ -120,9 +120,138 @@
     <p>
         Get the contents of a Gun.js soul once.
         Other outputs will happen if new sub-elements are added.
-        Note that only 1 level of the graph is retrieved. Subsequent levels only return a soul name. See the Gun.js docs for reasons.
+    </p>
+
+    <h3>Outputs</h3>
+    <p>
+        By default, multiple output messages are produced, one for each property of the 
+        "<a href="https://gun.eco/docs/FAQ#what-is-a-soul-what-does-a-node-look-like" title="Gun.js docs" target="_blank">soul</a>" 
+        being queried.
+    </p><p>
+        A single msg is output if either of the "Output a single msg" or "Output the whole hierarchy" flags are set.
+    </p><p>
+        In the 1st case, only a single level of the hierarchy is returned (along with soul references for any lower levels)
+        and you have the option whether to also return the Gun metadata (the default). 
+    </p><p>
+        In the 2nd case, the full hierarchy is returned with no Gun metadata.
+    </p>
+    <h4>msg properties</h4>
+    <dl class="message-properties">
+        <dt>topic
+            <span class="property-type">string</span>
+        </dt>
+        <dd>
+            The output topic is set to the "soul", e.g. the whole path to the returned data.
+        </dd>
+        <dt>payload
+            <span class="property-type">any</span>
+        </dt>
+        <dd>
+            The data returned by the query.
+        </dd>
+        <dt>other properties
+            <span class="property-type">any</span>
+        </dt>
+        <dd>
+            Other <code>msg.xxxx</code> properties are passed through <b>only</b> if a single output msg is requested.
+            This is either by selecting the "Output a single msg" flag or the "Output the whole hierarchy" flag.
+        </dd>
+    </dl>
+    
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>topic
+            <span class="property-type">string</span>
+        </dt>
+        <dd>
+            The input topic will be used as the "Path" (see settings below) if the Path is blank in settings.
+        </dd>
+        <dt>payload
+            <span class="property-type">any</span>
+        </dt>
+        <dd>
+            Input payload is ignored & replaced by output from Gun.js query.
+        </dd>
+        <dt>other properties
+            <span class="property-type">any</span>
+        </dt>
+        <dd>
+            Other <code>msg.xxxx</code> properties are passed through <b>only</b> if a single output msg is requested.
+            This is either by selecting the "Output a single msg" flag or the "Output the whole hierarchy" flag.
+        </dd>
+    </dl>
+    
+    <h3>Settings</h3>
+    <dl class="message-properties">
+        <dt>Name
+            <span class="property-type">string</span>
+        </dt>
+        <dd>
+            Standard Node-RED node name. Not used in any processing.
+        </dd>
+        <dt>Gun Config (<code>required</code>)
+            <span class="property-type">Gun configuration</span>
+        </dt>
+        <dd>
+            A Gun configuration node. This defines the Gun service to use along with any peers for synchronisation.
+        </dd>
+        <dt>Db (<code>required</code>)
+            <span class="property-type">string</span>
+        </dt>
+        <dd>
+            The top-level Gun object. This is treated slightly differently by Gun and so is required.
+            The Path is added to this to get the <i>soul</i> to query.
+        </dd>
+        <dt>Path
+            <span class="property-type">string</span>
+        </dt>
+        <dd>
+            Any remaining path to the soul to be queried. Added to the <i>Db</i>.
+            May be left blank, in which case any incoming <code>msg.topic</code> will be used instead.
+            While this may be left unset, it is recommended to use at least one name here.
+            <p>
+                Multiple levels of hierarchy can be specified here, use "/" as the deimiter.
+                See the Gun.js documentation for details.
+            </p>
+        </dd>
+        <dt>Output a single msg rather than one for each document?
+            <span class="property-type">boolean</span>
+        </dt>
+        <dd>
+            If set, a single msg will be output. That message will only contain a single level of the data hierarchy.
+            Further levels are represented by a Gun.js <code>#</code> property containing the soul of the next level
+            of data.
+            <p>
+                If not set, a msg for each property of the selected path will be output. In this case, the next level of hierarchy
+                <i>is</i> output but no more.
+            </p>
+        </dd>
+        <dt>Output the _ Gun object as well as the actual data?
+            <span class="property-type">boolean</span>
+        </dt>
+        <dd>
+            By default, this is unset and the Gun metadata is stripped from the output.
+            If set, the metadata will be included.
+            Note that this is ignored if the next flag is set.
+        </dd>
+        <dt>Output the whole hierarchy rather than just 1 level?
+            <span class="property-type">boolean</span>
+        </dt>
+        <dd>
+            If selected, a single msg will be output containing the full hierarchy of data beneath the selected level.
+            <p>
+                <b>WARNING</b>: This could be a LOT of data, caution is recommended.
+            </p>
+        </dd>
+    </dl>
+    
+    <h3>Details</h3>
+    <p>
+        Gun.js is a complex data management tool with quite a few subtleties. 
+        If you are not familiar with Gun.js, it is strongly recommended that you familiarise yourself with the concepts
+        and operation.
     </p>
     <p>
-        Other help to be completed.
+        <a href="https://gun.eco/docs" title="Gun.js docs" target="_blank">Gun.js Documentation</a>
     </p>
 </script>
