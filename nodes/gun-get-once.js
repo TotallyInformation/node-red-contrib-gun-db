@@ -62,9 +62,6 @@ module.exports = function(RED) {
         // Return full hierarchy or not (default)?
         node.allOut = config.allOut // default = false
 
-        // Add full soul reference
-        node.soul = node.path !== '' ? `${node.db}/${node.path}` : node.db
-
         // Retrieve the reference to the Gun factory function
         node.Gun = RED.nodes.getNode(node.gunconfig).Gun
 
@@ -75,7 +72,17 @@ module.exports = function(RED) {
          * @param {function} done Per msg finish function, node-red v1+
          **/
         function nodeInputHandler(msg, send, done) {
+
+            // If incoming msg has topic and node.path is blank, use the msg.topic as the path
+            if ( msg.topic && node.path === '') {
+                //   If db is included in msg.topic, make sure it doesn't get double counted
+                let leadingDb = new RegExp(`^${node.db}`)
+                node.path = msg.topic.replace(leadingDb,'')
+            }
             
+            // Add full soul reference
+            node.soul = node.path !== '' ? `${node.db}/${node.path}` : node.db
+
             // If msg is null, nothing will be sent
             if ( msg !== null ) {
 
