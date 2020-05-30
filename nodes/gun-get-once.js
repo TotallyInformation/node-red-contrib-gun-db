@@ -20,6 +20,7 @@
 const nodeName = 'gun-get-once'
 
 //const Gun = require('gun') // Not required, we use a single reference in the configuration node
+// Needed to allow this node to load the whole hierarchy - https://gun.eco/docs/API#-a-name-load-a-gun-load-cb-opt-
 require('gun/lib/load.js')
 
 // THIS FUNCTION IS EXECUTED ONLY ONCE AS NODE-RED IS LOADING
