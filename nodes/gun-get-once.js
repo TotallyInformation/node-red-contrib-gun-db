@@ -102,7 +102,7 @@ module.exports = function(RED) {
                     } else if ( node.singleOut === true ) {
 
                         // Create a one time output & listen for future additions only - re-running will replace the previous listener
-                        node.Gun.get(node.soul).once(function(value, key){
+                        node.Gun.get(node.soul).once(function(value){
                             // Makes sense here to carry fwd any non-standard msg props as we are only outputting a single msg
                             msg.topic = node.soul
                             msg.payload = node.rawOut !== true ? removeGunUnderscore(value) : value

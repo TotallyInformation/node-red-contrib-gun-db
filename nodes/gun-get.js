@@ -20,6 +20,8 @@
 const nodeName = 'gun-get'
 
 //const Gun = require('gun') // Not required, we use a single reference in the configuration node
+// Needed to allow this node to load the whole hierarchy - https://gun.eco/docs/API#-a-name-open-a-gun-open-callback-
+require('gun/lib/open.js')
 
 // THIS FUNCTION IS EXECUTED ONLY ONCE AS NODE-RED IS LOADING
 module.exports = function(RED) {
@@ -58,33 +60,56 @@ module.exports = function(RED) {
         node.singleOut  = config.singleOut // default = false
         // Show raw Gun return data in payload or remove the _ object (default?
         node.rawOut = config.rawOut // default = false
-
-        // Add full soul reference
-        node.soul = node.path !== '' ? `${node.db}/${node.path}` : node.db
+        // Return full hierarchy or not (default)?
+        node.allOut = config.allOut // default = false
 
         // Retrieve the reference to the Gun factory function
         node.Gun = RED.nodes.getNode(node.gunconfig).Gun
 
-        if (node.Gun) {
-            let db = node.Gun.get(node.db)
-            let data = node.path === '' ? db : db.get(node.path)
+        // Add full soul reference
+        node.soul = node.path !== '' ? `${node.db}/${node.path}` : node.db
 
+        if (node.Gun) {
             let msg = {}
 
-            if ( node.singleOut === true ) {
-                data.on(function(value, key){
+            if ( node.allOut === true ) {
+                        
+                // Output the full hierarchy
+                node.Gun.get(node.soul).load(function(value){
                     msg.topic = node.soul
-                    console.log(node.rawOut, value, removeGunUnderscore(value))
+                    msg.payload = value
+                    node.send(msg)
+                })
+
+            } else if ( node.singleOut === true ) {
+
+                // Create a one time output & listen for future additions only - re-running will replace the previous listener
+                node.Gun.get(node.soul).on(function(value){
+                    msg.topic = node.soul
                     msg.payload = node.rawOut !== true ? removeGunUnderscore(value) : value
                     node.send(msg)
                 })
+
             } else {
-                data.map().on(function(value, key){
-                    msg.topic = node.soul
+
+                // Create a one time output & listen for future additions only - re-running will replace the previous listener
+                node.Gun.get(node.soul).map().on(function(value, key){
+                    msg.topic = `${node.soul}/${key}`
                     msg.payload = node.rawOut !== true ? removeGunUnderscore(value) : value
                     node.send(msg)
                 })
+
             }
+
+            // Remove listener when node removed, redeployed or Node-RED ends
+            this.on('close', function() {
+                if ( (node.singleOut === true) || (node.allOut === true) ) {
+                    node.Gun.get(node.soul).off()
+                } else {
+                    node.Gun.get(node.soul).map().off()
+                }
+            })
+
         } else {
             console.log('GUN-GET No Gun Factory', node.Gun)
         }

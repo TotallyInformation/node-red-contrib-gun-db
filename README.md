@@ -57,19 +57,9 @@ Note that, by default, Gun only directly returns a single level of the hierarchy
 
 Additionally, you can choose whether to include Gun's metadata (the `_` property) or not. If outputting the whole hierarchy, the metadata is not available.
 
-#### To do
-
-* Allow path to be set from input msg.topic
-* Additional help information & documentation
-
 ### Gun: Listen - `get`
 
 Listen for new or changed data on or below the given path. Uses the Gun `.on` function.
-
-#### To do
-
-* Match the features of get-once
-* Additional help information & documentation
 
 ### Gun: put/set - `put`
 
