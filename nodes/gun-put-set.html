@@ -77,8 +77,8 @@
         <input type="text" id="node-input-path">
     </div>
 
-    <div class="form-row">
-        <input type="checkbox" id="node-input-set" style="display:inline-block;width:auto;vertical-align:top;padding-top:5px;">
+    <div class="form-row" style="margin-top:1em;">
+        <input type="checkbox" id="node-input-set" style="display:inline-block;width:auto;vertical-align:top;">
         <label for="node-input-set" style="width: 90%;">&nbsp;Use SET instead of PUT?</label>
     </div>
 
@@ -88,13 +88,158 @@
         See Help panel and <a href="https://gun.eco/docs/" target="_blank">Gun.js docs</a> for more information on paths.
     </div>
 
+    <div class="form-tips">
+        <b>IMPORTANT NOTE</b>: You cannot send a JavaScript Array to Gun.js, it will be ignored.
+        <p>
+            In addition, you cannot <code>put</code> anything other than a JavaScript Object.
+            You can send strings/numbers with <code>set</code>, however, they will be given a 
+            random property name.
+            These are the way that Gun.js work, they are not restrictions of this node.
+        </p><p>
+            This node forces every intermediate level of the hierarchy to be created since
+            this is the most consistent method. If this is not what you want, pester me for another
+            option.
+        </p>
+    </div>
+
 </script>
 
 <script type="text/html" data-help-name="gun-put-set">
     <p>
         Send msg payload to a Gun.js "Soul" using either PUT or SET.
     </p>
+
+    <h3>Outputs</h3>
     <p>
-        Other help to be completed.
+        The input msg is forwarded to the output but the topic is replaced and 
+        <code>msg.updateType</code> is added.
+    </p>
+    <h4>msg properties</h4>
+    <dl class="message-properties">
+        <dt>topic
+            <span class="property-type">string</span>
+        </dt>
+        <dd>
+            The output topic is set to the "soul", e.g. the whole path to the updated data.
+            If SET is used, the topic includes the newly created random ID so that you can
+            access the data again.
+        </dd>
+        <dt>updateType
+            <span class="property-type">string</span>
+        </dt>
+        <dd>
+            Either "<code>PUT</code>" or "<code>SET</code>".
+        </dd>
+        <dt>payload
+            <span class="property-type">any</span>
+        </dt>
+        <dd>
+            The input payload.
+        </dd>
+        <dt>other properties
+            <span class="property-type">any</span>
+        </dt>
+        <dd>
+            Other <code>msg.xxxx</code> properties are passed through.
+        </dd>
+    </dl>
+    
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>topic
+            <span class="property-type">string</span>
+        </dt>
+        <dd>
+            The input topic will be used as the "Path" (see settings below) if the Path 
+            is blank in settings.
+        </dd>
+        <dt>payload
+            <span class="property-type">any</span>
+        </dt>
+        <dd>
+            Input payload is put or set to the selected soul based on the settings or topic.
+            It is also sent through to the output msg.
+        </dd>
+        <dt>other properties
+            <span class="property-type">any</span>
+        </dt>
+        <dd>
+            Other <code>msg.xxxx</code> properties are passed through to the output msg 
+            but otherwise ignored.
+        </dd>
+    </dl>
+    
+    <h3>Settings</h3>
+    <dl class="message-properties">
+        <dt>Name
+            <span class="property-type">string</span>
+        </dt>
+        <dd>
+            Standard Node-RED node name. Not used in any processing.
+        </dd>
+        <dt>Gun Config (<code>required</code>)
+            <span class="property-type">Gun configuration</span>
+        </dt>
+        <dd>
+            A Gun configuration node. This defines the Gun service to use along with any peers
+            for synchronisation.
+        </dd>
+        <dt>Db (<code>required</code>)
+            <span class="property-type">string</span>
+        </dt>
+        <dd>
+            The top-level Gun object. This is treated slightly differently by Gun and so 
+            is required.
+            The Path is added to this to get the <i>soul</i> to query.
+        </dd>
+        <dt>Path
+            <span class="property-type">string</span>
+        </dt>
+        <dd>
+            Any remaining path to the soul to be queried. Added to the <i>Db</i>.
+            May be left blank, in which case any incoming <code>msg.topic</code> will be 
+            used instead.
+            While this may be left unset, it is recommended to use at least one name here.
+            <p>
+                Multiple levels of hierarchy can be specified here, use "/" as the delimiter.
+                See the Gun.js documentation for details.
+            </p><p>
+                Note that all intermediate levels of the specified db/path combination
+                will be created by this node automatically.
+            </p>
+        </dd>
+        <dt>Use SET instead of PUT?
+            <span class="property-type">boolean</span>
+        </dt>
+        <dd>
+            PUT is the default. Select this flag if you need SET instead.
+            <p>
+                <code>PUT</code> will only accept an OBJECT as input. Other types of 
+                data are ignored by Gun.js.
+            </p><p>
+                <code>SET</code> allows numbers and strings in addition to Objects.
+                However, Gun.js creates a random property name for the data
+            </p><p>
+                In either case, Arrays and Functions will be ignored by Gun.js.
+            </p>
+            <p>
+                SET creates a new property under the selected path but the property name
+                is randomly chosen by Gun.js. In this case, the output <code>msg.topic</code> will include
+                the new property name.
+                Just note that if you use SET with a number or string, you cannot directly GET it.
+                You have to GET the parent object. If you SET with an Object however, you can directly GET it.
+                These are some of the many oddities and discrepancies in Gun.js.
+            </p>
+        </dd>
+    </dl>
+    
+    <h3>Details</h3>
+    <p>
+        Gun.js is a complex data management tool with quite a few subtleties. 
+        If you are not familiar with Gun.js, it is strongly recommended that you familiarise yourself with the concepts
+        and operation.
+    </p>
+    <p>
+        <a href="https://gun.eco/docs" title="Gun.js docs" target="_blank">Gun.js Documentation</a>
     </p>
 </script>
