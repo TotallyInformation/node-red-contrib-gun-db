@@ -72,30 +72,60 @@ module.exports = function(RED) {
          * @param {function} done Per msg finish function, node-red v1+
          **/
         function nodeInputHandler(msg, send, done) {
+
+            // If incoming msg has topic and node.path is blank, use the msg.topic as the path
+            if ( msg.topic && node.path === '') {
+                //   If db is included in msg.topic, make sure it doesn't get double counted
+                let leadingDb = new RegExp(`^${node.db}`)
+                node.path = msg.topic.replace(leadingDb,'')
+            }
+            
+            // Add full soul reference
+            node.soul = node.path !== '' ? `${node.db}/${node.path}` : node.db
             
             // If msg is null, nothing will be sent
             if ( msg !== null ) {
-                if (node.Gun) {
-                    let db = node.Gun.get(node.db)
-                    let data = node.path === '' ? db : db.get(node.path)
 
+                if (node.Gun) {
+
+                    /**
+                     * WARNING: Unless you do a `get` on EVERY level of the hierarchy,
+                     *          you will not get the expected results because Gun.js
+                     *          will not automatically create the intermediate paths
+                     */
+                    var guns = node.Gun
+                    var splitSoul = node.soul.split('/')
+                    if ( ! Array.isArray(splitSoul) ) splitSoul = new Array(splitSoul)
+                    // Walk down the hierarchy
+                    splitSoul.forEach((step) => {
+                        // Save the latest gun.get object
+                        guns = guns.get(step)
+                    })
+                    
+                    let lastPath = ''
                     if ( node.set !== true ) {
                         /** Put values cannot be an array or a scalar (must be an object)
                          * TODO Force this to be an object
+                         * Object.prototype.toString.call(objectToTest)
                          */
-                        data.put(msg.payload)
+                        guns.put(msg.payload)
                     } else {
-                        // Use SET instead of PUT
-                        data.set(msg.payload)
+                        // Use SET instead of PUT - TODO: payload cannot be an array
+                        // Save the output to Get the random ID that was just added & add it to the output topic
+                        lastPath = guns.set(msg.payload)
                     }
 
-                    msg.topic = node.soul
+                    // If SET was used, add the new random ID that Gun created
+                    msg.topic = lastPath === '' ? node.soul : `${node.soul}/${lastPath._.has}`
                     msg.updateType = node.type
                     send(msg)
 
                 } else {
+
                     console.log('GUN-PUT-GET No Gun Factory', node.Gun)
+
                 }
+
             }
 
             done()
